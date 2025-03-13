@@ -2,6 +2,7 @@
   "expo": {
     "name": "CS5520-final-smartbite",
     "slug": "CS5520-final-smartbite",
+    "scheme": "smartbite",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,6 +24,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
