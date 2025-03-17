@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Storage key for theme preference
 const THEME_STORAGE_KEY = '@smartbite_theme';
 
+
 /**
  * Define the shape of your theme. 
  * Feel free to add or remove properties based on your UI needs.
@@ -77,7 +78,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [theme, setTheme] = useState<Theme>(lightTheme);
-  
+
   // Load saved theme preference
   useEffect(() => {
     const loadTheme = async () => {
