@@ -1,6 +1,10 @@
 // theme.tsx (or themeContext.tsx, whichever name you prefer)
 
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Storage key for theme preference
+const THEME_STORAGE_KEY = '@smartbite_theme';
 
 /**
  * Define the shape of your theme. 
@@ -73,9 +77,36 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [theme, setTheme] = useState<Theme>(lightTheme);
+  
+  // Load saved theme preference
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme === 'dark') {
+          setTheme(darkTheme);
+        }
+      } catch (error) {
+        console.error('Error loading theme:', error);
+      }
+    };
+    
+    loadTheme();
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === darkTheme ? lightTheme : darkTheme));
+  const toggleTheme = async () => {
+    const newTheme = theme === darkTheme ? lightTheme : darkTheme;
+    setTheme(newTheme);
+    
+    // Save theme preference
+    try {
+      await AsyncStorage.setItem(
+        THEME_STORAGE_KEY, 
+        newTheme === darkTheme ? 'dark' : 'light'
+      );
+    } catch (error) {
+      console.error('Error saving theme:', error);
+    }
   };
 
   return (

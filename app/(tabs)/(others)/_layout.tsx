@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { ThemeContext } from '../../../ThemeContext';
 
-export default function RecipesLayout() {
+export default function OthersLayout() {
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
 
@@ -20,29 +20,12 @@ export default function RecipesLayout() {
         headerBackVisible: true,
       }}
     >
-      {/* Main Recipes list */}
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: 'All My Recipes',
-        }}
-      />
-      
-      {/* Add new Recipe screen */}
-      <Stack.Screen
-        name="add"
-        options={{
-          headerTitle: 'Add Recipe',
-        }}
-      />
-
-      {/* Single Recipe detail screen */}
-      <Stack.Screen
-        name="[id]"
-        options={{
-          headerTitle: 'Recipe Details',
+          headerTitle: 'Settings',
         }}
       />
     </Stack>
   );
-}
+} 

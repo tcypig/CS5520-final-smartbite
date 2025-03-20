@@ -1,15 +1,21 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../ThemeContext';
 
 export default function TabsLayout() {
   const { theme } = useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
+
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle: { backgroundColor: theme.navigationBackgroundColor },
-        tabBarActiveTintColor: theme.navigationTextColor,
+        tabBarStyle: { backgroundColor: currentTheme.navigationBackgroundColor },
+        tabBarActiveTintColor: currentTheme.navigationTextColor,
         tabBarInactiveTintColor: "#AAA",
         headerShown: false,
       }}
@@ -31,6 +37,16 @@ export default function TabsLayout() {
           headerTitle: 'Nutrition Info',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="leaf-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="(others)"
+        options={{
+          title: 'Settings',
+          headerTitle: 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings-outline" size={size} color={color} />
           ),
         }}
       />
