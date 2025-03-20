@@ -33,8 +33,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="(nutritions)"
         options={{
+          headerShown: false,
           title: 'Nutrition',
-          headerTitle: 'Nutrition Info',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="leaf-outline" size={size} color={color} />
           ),
