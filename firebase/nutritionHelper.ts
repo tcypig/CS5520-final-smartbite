@@ -1,11 +1,11 @@
 import { addDoc, collection, deleteDoc, doc, DocumentData, setDoc, Timestamp, updateDoc } from "firebase/firestore";
-import { nutritionDB } from "./firebaseSetup";
+import { database } from "./firebaseSetup";
 import { Alert } from "react-native";
 
 
 export async function writeMealToDB(userId:string, data: DocumentData) {
   try {
-    const userRef = doc(nutritionDB, "users", userId);
+    const userRef = doc(database, "users", userId);
     const mealsRef = collection(userRef, 'meals');
     const docRef = await addDoc(mealsRef, data);
     return docRef.id;
@@ -56,7 +56,7 @@ export async function analyzeNutrition(userId: string, mealId: string, ingredien
 
 export async function writeNutritionToDB(userId: string, mealId: string, nutritionData: DocumentData) {
   try {
-    const mealRef = doc(nutritionDB, "users", userId, "meals", mealId);
+    const mealRef = doc(database, "users", userId, "meals", mealId);
     const nutritionRef = collection(mealRef, "nutrition"); 
     // await addDoc(nutritionRef, nutritionData);
     // await setDoc(doc(mealRef, "nutrition", "nutritionDetails"), nutritionData);
@@ -69,7 +69,7 @@ export async function writeNutritionToDB(userId: string, mealId: string, nutriti
 
 export async function updateMealToDB(userId:string, mealId:string, data: DocumentData) {
   try {
-    const mealRef = doc(nutritionDB, "users", userId, "meals", mealId);
+    const mealRef = doc(database, "users", userId, "meals", mealId);
     await setDoc(mealRef, data);
     await analyzeNutrition(userId, mealId, data.ingredients);
   } catch (e) {
@@ -79,7 +79,7 @@ export async function updateMealToDB(userId:string, mealId:string, data: Documen
 
 export async function deleteMealFromDB(userId:string, mealId: string) {
   try {
-    const mealRef = doc(nutritionDB, "users", userId, "meals", mealId);
+    const mealRef = doc(database, "users", userId, "meals", mealId);
     await deleteDoc(mealRef);
   } catch (error) {
     console.error("Error deleting document: ", error);

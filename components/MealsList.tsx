@@ -2,38 +2,12 @@ import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'r
 import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
-import { nutritionDB } from '@/firebase/firebaseSetup'
+import { database } from '@/firebase/firebaseSetup'
 import { userId } from '@/app/(tabs)/(nutritions)/AddMeal';
 import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
+import { mealsFromDB, Nutrition } from '@/types';
 
-export interface mealsFromDB {
-  id: string;
-  date: Timestamp;
-  type: string;
-  image?: string;
-  ingredients: string[];
-  analyzed: boolean;
-  nutrition?: Nutrition;
-}
-
-export interface Nutrition {
-  calories: number;
-  totalNutrients: {
-    [key: string]: {
-      label: string;
-      quantity: number;
-      unit: string;
-    };
-  };
-  totalDaily: {
-    [key: string]: {
-      label: string;
-      quantity: number;
-      unit: string;
-    };
-  };
-}
 
 interface MealsListProps {
   startDate: Date; 
@@ -53,7 +27,7 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
   useEffect(() => {
     if (!userId) return;
     try {
-      const mealsRef = collection(nutritionDB, "users", userId, "meals");
+      const mealsRef = collection(database, "users", userId, "meals");
 
       const startOfDay = new Date(startDate);
       startOfDay.setHours(0, 0, 0, 0); 

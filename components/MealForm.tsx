@@ -4,14 +4,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from 'expo-router';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Timestamp } from 'firebase/firestore';
+import { Meal } from '@/types';
 
-export interface Meal {
-  date: Timestamp;
-  type: string;
-  image?: string;
-  ingredients: string[];
-  analyzed: boolean;
-}
 
 interface MealFormProps {
     initialMeal?: Meal;

@@ -5,15 +5,8 @@ import { Timestamp } from 'firebase/firestore';
 import MealForm from '@/components/MealForm';
 import { useContext } from 'react';
 import { ThemeContext } from '@/ThemeContext';
+import { Meal } from '@/types';
 
-
-interface Meal {
-  date: Timestamp;
-  type: string;
-  image?: string;
-  ingredients: string[];
-  analyzed: boolean;
-}
 
 export const userId = "testUser";
 
