@@ -1,10 +1,11 @@
-import { Alert, Button, FlatList, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, Button, FlatList, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from 'expo-router';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Timestamp } from 'firebase/firestore';
 import { Meal } from '@/types';
+import { ThemeContext } from '@/ThemeContext';
 
 
 interface MealFormProps {
@@ -28,6 +29,13 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
     { label: "Dinner", value: "Dinner"},
     { label: "Snack", value: "Snack"},
   ];
+
+  const { theme } = React.useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
 
   function toggleDatePicker() {
     setDate(date || new Date());
@@ -73,7 +81,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
   return (
     <View style={styles.container}>
       {/* Date Picker */}
-      <Text style={styles.label}>Date *</Text>
+      <Text style={[styles.label, {color: currentTheme.text}]}>Date *</Text>
       <TextInput
         style={styles.textInput}
         placeholder="Select Date"
@@ -99,7 +107,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
       )}
 
       {/* Meal Type Dropdown */}
-      <Text style={styles.label}>Meal Type *</Text>
+      <Text style={[styles.label, {color: currentTheme.text}]}>Meal Type *</Text>
       <DropDownPicker
         open={open}
         value={type}
@@ -110,14 +118,14 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
       />
 
       {/* Image Picker */}
-      <Text style={styles.label}>Image (optional) *</Text>
+      <Text style={[styles.label, {color: currentTheme.text}]}>Image (optional) *</Text>
       <TextInput
         style={styles.textInput}
         placeholder="Select Image (completed in future)"
       />
 
       {/* Meal Input */}
-      <Text style={styles.label}>Meals *</Text>
+      <Text style={[styles.label, {color: currentTheme.text}]}>Meals *</Text>
       <TextInput
         style={styles.textInput}
         placeholder="Enter meal details(quantity & unit). e.g. 1 cup rice"
@@ -131,7 +139,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View style={styles.ingredientItem}>
-            <Text>{item}</Text>
+            <Text style={{color: currentTheme.text}}>{item}</Text>
             <TouchableOpacity onPress={() => removeIngredient(index)}>
               <Text style={styles.deleteText}>X</Text>
             </TouchableOpacity>

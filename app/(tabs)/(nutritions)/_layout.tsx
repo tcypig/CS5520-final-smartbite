@@ -1,9 +1,16 @@
 import { ThemeContext } from '@/ThemeContext';
 import { Stack } from 'expo-router'
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 export default function NutritionsLayout() {
   const { theme } = useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  // Update layout when theme changes
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
+
   return (
     <Stack
       screenOptions={{

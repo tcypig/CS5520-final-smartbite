@@ -7,6 +7,7 @@ import { userId } from '@/app/(tabs)/(nutritions)/AddMeal';
 import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
 import { mealsFromDB, Nutrition } from '@/types';
+import { ThemeContext } from '@/ThemeContext';
 
 
 interface MealsListProps {
@@ -21,7 +22,12 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
     { name: "Protein", value: 0, color: "#FF6666" },
     { name: "Carbs", value: 0, color: "#66CC66" },
   ]);
+  const { theme } = React.useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
 
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
 
   // set listener for meals collection
   useEffect(() => {
@@ -119,7 +125,7 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
 
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
       {/* Pie Chart */}
       <CustomPieChart chartData={chartData} />
 
@@ -132,7 +138,6 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
             <View style={styles.mealInfo}>
               <Text style={styles.mealType}>{item.type}</Text>
               <Text>Date: {item.date.toDate().toDateString()}</Text>
-              <Text>Type: {item.type}</Text>
               <Text>Ingredients: {item.ingredients.join(", ")}</Text>
               <Text>Calories: {item.nutrition?.calories}</Text>
             </View>

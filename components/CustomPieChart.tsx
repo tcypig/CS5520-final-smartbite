@@ -1,13 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PieChart } from 'react-native-chart-kit';
 import { Svg, Circle } from 'react-native-svg';
+import { ThemeContext } from '@/ThemeContext';
 
 interface PieChartProps {
   chartData: { name: string, value: number, color: string }[];
 }
 
 export default function CustomPieChart({chartData}: PieChartProps) {
+  const { theme } = React.useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
+  
   return (
     <View>
       <PieChart
@@ -15,7 +23,7 @@ export default function CustomPieChart({chartData}: PieChartProps) {
           name,
           population: value,
           color,
-          legendFontColor: "#000",
+          legendFontColor: currentTheme.text,
           legendFontSize: 14,
         }))}
         width={300}
@@ -47,7 +55,7 @@ const styles = StyleSheet.create({
   },
   caloriesContainer: {
     position: 'absolute',
-    top: 80, // Adjust this for better centering
+    top: 80,
     left: 135,
     alignItems: 'center',
   },

@@ -1,17 +1,21 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import { Meal } from '@/components/MealForm'
-import React, { useContext, useState } from 'react'
+import { Meal } from '@/types'
+import React, { useContext, useEffect, useState } from 'react'
 import { deleteMealFromDB, updateMealToDB } from '@/firebase/nutritionHelper'
 import { userId } from './AddMeal'
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { mealsFromDB } from '@/components/MealsList';
 import { Timestamp } from 'firebase/firestore';
 import MealForm from '@/components/MealForm';
 import { ThemeContext } from '@/ThemeContext';
 
 export default function EditMeal() {
   const { theme } = useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
 
   const params = useLocalSearchParams(); 
   const mealId = params.id as string;
@@ -55,7 +59,7 @@ export default function EditMeal() {
 
   
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Stack.Screen 
         options={{ 
           headerRight: () => (

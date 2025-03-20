@@ -1,11 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView, Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { mealsFromDB } from '@/components/MealsList';
+import { mealsFromDB } from '@/types';
 import { Timestamp } from 'firebase/firestore';
-import { PieChart } from 'react-native-chart-kit';
 import CustomPieChart from '@/components/CustomPieChart';
 import NutritionFacts from '@/components/NutritionFacts';
+import { ThemeContext } from '@/ThemeContext';
 
 const DEFAULT_IMAGE = "https://t4.ftcdn.net/jpg/10/74/62/49/360_F_1074624937_ut18QYOFrN0Eijzm0WF0LTxzl9wGlKtS.jpg";
 
@@ -35,13 +35,19 @@ export default function MealDetail() {
     { name: "Carbs", value: carbs, color: "#4CAF50" },
   ];
 
+  const { theme } = React.useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: currentTheme.background }]}>
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>{meal.date.toDate().toDateString()} - {meal.type}</Text>
+        <Text style={[styles.title, {color: currentTheme.text}]}>{meal.date.toDate().toDateString()} - {meal.type}</Text>
       </View>
 
       {/* Meal Images */}

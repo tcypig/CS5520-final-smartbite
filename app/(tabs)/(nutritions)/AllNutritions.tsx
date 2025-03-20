@@ -13,6 +13,11 @@ export default function AllNutritions() {
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const { theme } = useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
   
   function toggleStartDatePicker() {
     setShowStartPicker((prev) => !prev)
@@ -36,7 +41,7 @@ export default function AllNutritions() {
 
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
       <Stack.Screen 
         options={{
           headerRight: () => (
@@ -55,14 +60,14 @@ export default function AllNutritions() {
       <View style={styles.dateContainer}>
         <Pressable 
           onPress={toggleStartDatePicker}>
-          <Ionicons name="chevron-back-outline" size={24} />
+          <Ionicons name="chevron-back-outline" size={24} color={currentTheme.text} />
         </Pressable>
-        <Text style={styles.dateText}>
+        <Text style={[styles.dateText, { color: currentTheme.dateText }]}>
           {startDate.toDateString()} - {endDate.toDateString()}
         </Text>
         <Pressable 
           onPress={toggleEndDatePicker}>
-          <Ionicons name="chevron-forward-outline" size={24} />
+          <Ionicons name="chevron-forward-outline" size={24} color={currentTheme.text} />
         </Pressable>
       </View>
       {showStartPicker && (
