@@ -1,12 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Nutrition } from './MealsList';
+import { Nutrition } from '@/types';
 
-interface Nutrient {
-    label: string;
-    quantity: number;
-    unit: string;
-}
 
 interface NutritionFactsProps {
     nutrients: Nutrition;
