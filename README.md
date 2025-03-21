@@ -46,7 +46,7 @@ We've implemented the core nutrition tracking functionalities, including:
 <img src="assets/nutritionPhoto/mealDetail.png" alt="Meals Detail" width="20%"/>
 <img src="assets/nutritionPhoto/editMeal.png" alt="Edit Meals" width="20%"/>
 
-#### Nutrition Screenshot:  
+#### Recipe Screenshot:  
 <img src="assets/nutritionPhoto/allRecipes.png" alt="all Meals & Nutrition" width="20%"/>
 <img src="assets/nutritionPhoto/addRecipe.png" alt="Add Recipes" width="20%"/>
 <img src="assets/nutritionPhoto/recipeDetail.png" alt="Recipes Detail" width="20%"/>
