@@ -1,7 +1,7 @@
 import { Alert, Button, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { router, Stack } from 'expo-router'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Ionicons } from '@expo/vector-icons'
 import MealsList from '@/components/MealsList'
 import { ThemeContext } from '@/ThemeContext'
