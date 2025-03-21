@@ -8,6 +8,7 @@ import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
 import { mealsFromDB, Nutrition } from '@/types';
 import { ThemeContext } from '@/ThemeContext';
+import { start } from 'repl';
 
 
 interface MealsListProps {
@@ -53,6 +54,11 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
       const unsubscribe = onSnapshot(mealsQuery, (snapshot) => {
         if (snapshot.empty) {
           setMeals([]);
+          setChartData([
+            { name: "Fat", value: 0, color: "#FFCC00" },
+            { name: "Protein", value: 0, color: "#FF6666" },
+            { name: "Carbs", value: 0, color: "#66CC66" },
+          ]);
         } else {
           let newMeals: mealsFromDB[] = [];
           let totalFat = 0, totalProtein = 0, totalCarbs = 0;
