@@ -73,9 +73,6 @@ export default function RecipesMainScreen() {
     setFavorites(updatedSet);
   };
 
-  /**
-   * 按照 selectedCategory 进行前端过滤
-   */
   const filteredRecipes = recipes.filter(recipe => {
     if (selectedCategory === 'all') {
       return true;
@@ -133,7 +130,6 @@ export default function RecipesMainScreen() {
       </PressableButton>
   
       <FlatList
-        // 保持你的 key、refreshKey、extraData 逻辑，UI 也不变
         data={filteredRecipes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (

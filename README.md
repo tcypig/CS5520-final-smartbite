@@ -73,5 +73,3 @@ We've implemented the core nutrition tracking functionalities, including:
 - Implement **notifications** to allow users to schedule reminders. 
 - Add **user authentication** to enable secure login and personalized data storage.
 - Improve **UI & Styling** for a better user experience.
-
-
