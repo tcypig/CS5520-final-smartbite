@@ -1,12 +1,12 @@
+// app/(tabs)/(others)/_layout.tsx
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import { ThemeContext } from '../../../ThemeContext';
+import { ThemeContext } from '../../../../ThemeContext';
 
 export default function OthersLayout() {
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
 
-  // Update layout when theme changes
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
@@ -20,28 +20,29 @@ export default function OthersLayout() {
         headerBackVisible: true,
       }}
     >
+      {/* Main "Settings" page */}
       <Stack.Screen
         name="index"
         options={{
           headerTitle: 'Settings',
         }}
       />
+
+      {/* Register a stack screen for preferences */}
+      <Stack.Screen
+        name="preferences/index"
+        options={{
+          headerTitle: 'Preferences',
+        }}
+      />
+
+      {/* If you want a single preference detail/edit page */}
+      <Stack.Screen
+        name="preferences/[id]"
+        options={{
+          headerTitle: 'Preference Detail',
+        }}
+      />
     </Stack>
   );
-} 
-
-      // {/* Register a stack screen for preferences */}
-      // <Stack.Screen
-      //   name="preferences/index"
-      //   options={{
-      //     headerTitle: 'Preferences',
-      //   }}
-      // />
-
-      // {/* If you want a single preference detail/edit page */}
-      // <Stack.Screen
-      //   name="preferences/[id]"
-      //   options={{
-      //     headerTitle: 'Preference Detail',
-      //   }}
-      // />
+}

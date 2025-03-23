@@ -76,7 +76,7 @@ export default function AllNutritions() {
           value={startDate || new Date()}
           mode="date"
           display="inline"
-          onChange={(event, selectedDate) => {
+          onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
             if (selectedDate) {
               setStartDate(selectedDate);
               setShowStartPicker(false);
@@ -90,7 +90,7 @@ export default function AllNutritions() {
           value={endDate || new Date()}
           mode="date"
           display="inline"
-          onChange={(event, selectedDate) => {
+          onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
             if (selectedDate) {
               setEndDate(selectedDate);
               setShowEndPicker(false);

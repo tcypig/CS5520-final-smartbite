@@ -9,14 +9,13 @@ import { RecipeData } from '@/types';
 
 export default function EditRecipeScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams(); // 我们从上个页面传来的食谱id
+  const { id } = useLocalSearchParams();
   const [name, setName] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const { theme } = useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
 
-  // 加载原有数据
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
@@ -26,9 +25,7 @@ export default function EditRecipeScreen() {
       if (!id) return;
       const data = await getRecipeById(id as string);
       if (data) {
-        // 预填数据
         setName(data.name);
-        // 原ingredients是数组，这里我们用逗号分隔再放到TextInput
         setIngredients(data.ingredients.join(', '));
         setInstructions(data.instructions);
       }
@@ -39,7 +36,6 @@ export default function EditRecipeScreen() {
   const handleSave = async () => {
     if (!id) return;
     try {
-      // 将逗号分隔的ingredients转回数组
       const ingArr = ingredients
         .split(',')
         .map((i) => i.trim())
@@ -51,7 +47,6 @@ export default function EditRecipeScreen() {
         instructions,
       });
 
-      // 返回上一页（详情页）或直接回到列表
       router.back();
     } catch (err) {
       console.log('Error updating recipe:', err);
