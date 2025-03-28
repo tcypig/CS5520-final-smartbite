@@ -33,11 +33,14 @@ export async function analyzeNutrition(userId: string, mealId: string, ingredien
       
       if (!response.ok) {
         const responseText = await response.text();
-        console.error("API Error:", response.status, responseText);
+        // console.error("API Error:", response.status, responseText);
 
         Alert.alert(
           "Nutrition Analysis Failed",
-          "We couldn't analyze the meal. Please enter ingredients clearly. Include **quantity and unit** (e.g., 1 cup coffee)",
+          // "We couldn't analyze the meal. Please enter ingredients clearly. Include **quantity and unit** (e.g., 1 cup coffee)",
+          response.status === 555 || response.status === 400
+            ? "Please check that each ingredient includes a quantity and unit."
+            : `Something went wrong. \nTry again later. \n\nDetails:\n${responseText}.`,
           [{ text: "OK" }]
         );
         return;

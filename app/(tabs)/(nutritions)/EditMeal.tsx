@@ -8,10 +8,15 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Timestamp } from 'firebase/firestore';
 import MealForm from '@/components/MealForm';
 import { ThemeContext } from '@/ThemeContext';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '@/firebase/firebaseSetup';
+
 
 export default function EditMeal() {
   const { theme } = useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
+  const [meal, setMeal] = useState<Meal | null>(null);
+  const [displayImageUri, setDisplayImageUri] = useState<string>("");
 
   useEffect(() => {
     setCurrentTheme(theme);
@@ -19,19 +24,68 @@ export default function EditMeal() {
 
   const params = useLocalSearchParams(); 
   const mealId = params.id as string;
-  const meal: Meal = {
-    date: Timestamp.fromDate(new Date(typeof(params.date) === "string"? params.date : "")),
-    type: params.type as string,
-    image: params.image as string,
-    ingredients: typeof params.ingredients === "string"
-      ? params.ingredients.split(",").map((item) => item.trim())
-      : [],
-    analyzed: params.analyzed === "true",
-  }
+
+  useEffect(() => {
+    async function loadImage() {
+      try {
+        let imageUri = typeof params.image === "string" ? params.image : "";
+        if (imageUri && !imageUri.startsWith("http")) {
+          const imageRef = ref(storage, imageUri);
+          imageUri = await getDownloadURL(imageRef);
+        }
+
+        const convertedMeal: Meal = {
+          date: Timestamp.fromDate(new Date(typeof params.date === "string" ? params.date : "")),
+          type: params.type as string,
+          image: imageUri,
+          ingredients: typeof params.ingredients === "string"
+            ? params.ingredients.split(",").map((item) => item.trim())
+            : [],
+          analyzed: params.analyzed === "true",
+        };
+
+        setMeal(convertedMeal);
+        setDisplayImageUri(imageUri);
+      } catch (error) {
+        console.error("Failed to load image:", error);
+      }
+    }
+    loadImage();
+  }, [])
+
   
+  async function fetchImage(uri: string) {
+    try {
+      const response = await fetch(uri);
+      if (!response.ok) {
+        throw new Error("Error fetching image");
+      }
+      const blob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf('/') + 1);
+      const imageRef = ref(storage, `images/${imageName}`);
+      const uploadResult = await uploadBytesResumable(imageRef, blob);
+      return uploadResult.metadata.fullPath;
+    } catch (error) {
+      console.error("Error fetching image", error);
+    }
+  }
 
   async function handleUpdateMeal(updatedMeal: Meal) {
-    await updateMealToDB(userId, mealId, updatedMeal);
+    let newUpdatedMeal: Meal = updatedMeal;
+    // if the image is updated, fetch the image and store it in the storage
+    if (updatedMeal.image && updatedMeal.image !== displayImageUri) {
+      const storedImageUri = await fetchImage(updatedMeal.image);
+      newUpdatedMeal = {
+        ...updatedMeal,
+        image: storedImageUri,
+      };
+    } else {
+      newUpdatedMeal = {
+        ...updatedMeal,
+        image: params.image as string,
+      };
+    }
+    await updateMealToDB(userId, mealId, newUpdatedMeal);
     router.back();
   }
 
@@ -70,7 +124,7 @@ export default function EditMeal() {
           ),
         }}
       />
-      <MealForm initialMeal={meal} onSubmit={handleUpdateMeal} />
+      {meal && <MealForm initialMeal={meal} onSubmit={handleUpdateMeal} />}
     </View>
   )
 }
