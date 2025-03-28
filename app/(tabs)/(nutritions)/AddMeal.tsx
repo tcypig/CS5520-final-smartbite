@@ -59,9 +59,9 @@ export default function AddMeal() {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: currentTheme.background }]}>
+    <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
       <MealForm onSubmit={handleSave} />
-    </ScrollView>
+    </View>
   )
 }
 

@@ -16,6 +16,7 @@ export default function EditMeal() {
   const { theme } = useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
   const [meal, setMeal] = useState<Meal | null>(null);
+  const [displayImageUri, setDisplayImageUri] = useState<string>("");
 
   useEffect(() => {
     setCurrentTheme(theme);
@@ -44,6 +45,7 @@ export default function EditMeal() {
         };
 
         setMeal(convertedMeal);
+        setDisplayImageUri(imageUri);
       } catch (error) {
         console.error("Failed to load image:", error);
       }
@@ -70,11 +72,17 @@ export default function EditMeal() {
 
   async function handleUpdateMeal(updatedMeal: Meal) {
     let newUpdatedMeal: Meal = updatedMeal;
-    if (updatedMeal.image && updatedMeal.image !== meal?.image) {
+    // if the image is updated, fetch the image and store it in the storage
+    if (updatedMeal.image && updatedMeal.image !== displayImageUri) {
       const storedImageUri = await fetchImage(updatedMeal.image);
       newUpdatedMeal = {
         ...updatedMeal,
         image: storedImageUri,
+      };
+    } else {
+      newUpdatedMeal = {
+        ...updatedMeal,
+        image: params.image as string,
       };
     }
     await updateMealToDB(userId, mealId, newUpdatedMeal);

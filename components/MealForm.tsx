@@ -1,4 +1,4 @@
-import { Alert, Button, FlatList, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
+import { Alert, Button, FlatList, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, ScrollView, KeyboardAvoidingView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from 'expo-router';
@@ -127,7 +127,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
           <Ionicons name="restaurant-outline" size={18} color={currentTheme.text} />
           <Text style={[styles.label, {color: currentTheme.text}]}>Type</Text>
         </View>
-        <View style={styles.inputRow}>
+        <View style={[styles.inputRow]}>
           <DropDownPicker
             open={open}
             value={type}
@@ -156,7 +156,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
       </View>
       {takenImageUri && 
         <View style={styles.imageContainer}>
-          <Image source={{uri: takenImageUri}} style={{width: 200, height: 200, backgroundColor: '#eee', borderRadius: 10}}/>
+          <Image source={{uri: takenImageUri}} style={styles.image}/>
           <Pressable onPress={() => setTakenImageUri("")}>
             <Ionicons name="close-circle" size={24} color="#ff4d4d" />
           </Pressable>
@@ -186,26 +186,25 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
           </Pressable>
         </View>
       </View>
-
-      {ingredients.map((item, index) => (
-        <View key={index.toString()} style={styles.ingredientCard}>
-          {/* Left icon */}
-          <View style={styles.ingredientIcon}>
-            <Ionicons name="create-outline" size={24} color="#666" />
-          </View>
-
-          {/* Ingredient text */}
-          <View style={styles.ingredientTextBox}>
-            <Text style={[styles.ingredientTitle]}>{item}</Text>
-          </View>
-
-          {/* Right delete icon */}
-          <TouchableOpacity onPress={() => removeIngredient(index)} style={styles.deleteButton}>
-            <Ionicons name="close-circle" size={22} color="#ff5c5c" />
-          </TouchableOpacity>
-        </View>
-      ))}
       
+      {/* Ingredients List */}
+      <FlatList
+        data={ingredients}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <View style={styles.ingredientCard}>
+            <View style={styles.ingredientIcon}>
+              <Ionicons name="create-outline" size={24} color="#666" />
+            </View>
+            <View style={styles.ingredientTextBox}>
+              <Text style={styles.ingredientTitle}>{item}</Text>
+            </View>
+            <TouchableOpacity onPress={() => removeIngredient(index)} style={styles.deleteButton}>
+              <Ionicons name="close-circle" size={22} color="#ff5c5c" />
+            </TouchableOpacity>
+          </View>
+        )}
+      />
 
       {/* Buttons */}
       <View style={styles.buttonRow}>
@@ -272,9 +271,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: { 
-    width: 200, 
-    height: 200, 
-    marginTop: 10 
+    width: 60, 
+    height: 60, 
+    backgroundColor: '#eee', 
+    borderRadius: 10 
   },
 
   addButton: {
