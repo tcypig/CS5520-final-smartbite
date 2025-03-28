@@ -23,7 +23,7 @@ export default function CustomPieChart({chartData}: PieChartProps) {
           name,
           population: value,
           color,
-          legendFontColor: currentTheme.text,
+          // legendFontColor: currentTheme.text,
           legendFontSize: 14,
         }))}
         width={300}

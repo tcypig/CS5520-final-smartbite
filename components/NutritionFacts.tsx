@@ -15,7 +15,7 @@ export default function NutritionFacts({ nutrients }: NutritionFactsProps) {
   const totalDaily = nutrients.totalDaily || {};
   
   return (
-    <View style={styles.container}>
+    <View>
       {/* Calories Section */}
       <View style={styles.caloriesContainer}>
         <Text style={styles.caloriesText}>Calories</Text>
@@ -49,15 +49,15 @@ export default function NutritionFacts({ nutrients }: NutritionFactsProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
+  // container: {
+  //   backgroundColor: "#fff",
+  //   padding: 16,
+  //   borderRadius: 10,
+  //   shadowColor: "#000",
+  //   shadowOpacity: 0.1,
+  //   shadowRadius: 4,
+  //   elevation: 3,
+  // },
   caloriesContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

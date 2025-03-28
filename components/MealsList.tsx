@@ -1,4 +1,4 @@
-import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
 import { mealsFromDB, Nutrition } from '@/types';
 import { ThemeContext } from '@/ThemeContext';
-import { start } from 'repl';
+import EmptyState from './EmptyState';
 
 
 interface MealsListProps {
@@ -63,7 +63,7 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
           let newMeals: mealsFromDB[] = [];
           let totalFat = 0, totalProtein = 0, totalCarbs = 0;
 
-          snapshot.forEach((doc) => {
+          snapshot.forEach(async (doc) => {
             const meal = doc.data() as mealsFromDB;
             
             const nutrition = meal.nutrition
@@ -131,51 +131,100 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
 
 
   return (
-    <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
+    <ScrollView style={[styles.container, { backgroundColor: currentTheme.background }]}>
       {/* Pie Chart */}
-      <CustomPieChart chartData={chartData} />
+      <View style={styles.section}>
+        <CustomPieChart chartData={chartData} />
+      </View>
 
       {/* Meals List */}
-      <FlatList
-        data={meals}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.mealCard}>
-            <View style={styles.mealInfo}>
-              <Text style={styles.mealType}>{item.type}</Text>
-              <Text>Date: {item.date.toDate().toDateString()}</Text>
-              <Text>Ingredients: {item.ingredients.join(", ")}</Text>
-              <Text>Calories: {item.nutrition?.calories}</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Pressable 
-                onPress={() => handlePressDetail(item)}>
-                <Ionicons name="search" size={24} />
-              </Pressable>
-              <Pressable onPress={() => handelPressEdit(item)}>
-                <Ionicons name="pencil" size={24} />
-              </Pressable>
-            </View>
+      {meals.length === 0 ? (
+        <EmptyState />
+      ): (
+      meals.map((item) => (
+        <View key={item.id} style={styles.mealCard}>
+          <View style={styles.mealInfo}>
+            <Text style={styles.mealType}>{item.type}</Text>
+            <Text style={styles.mealDetail}>Date: {item.date.toDate().toDateString()}</Text>
+            <Text style={styles.mealDetail}>Calories: {item.nutrition?.calories} kcal</Text>
+            <Text style={styles.mealDetail}>Ingredients: {item.ingredients.join(", ")}</Text>
           </View>
-        )}
-      />
-    </View>  )
+          <View style={styles.buttonContainer}>
+            <Pressable 
+              onPress={() => handlePressDetail(item)}>
+              <Ionicons name="search" size={24} color="#555"/>
+            </Pressable>
+            <Pressable onPress={() => handelPressEdit(item)}>
+              <Ionicons name="pencil" size={24} color="#555"/>
+            </Pressable>
+          </View>
+        </View>
+      ))
+    )}
+      
+    </ScrollView>  )
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 10, backgroundColor: "#fff" },
+  section: {
+    backgroundColor: "#fff",
+    marginBottom: 16,
+    borderRadius: 12, 
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 10,
+    color: "#333",
+  },
   mealCard: { 
     flexDirection: "row", 
     justifyContent: "space-between", 
-    padding: 10, marginTop: 10, 
-    backgroundColor: "#f2f2f2", 
-    borderRadius: 10, 
+    padding: 16, 
+    marginTop: 10, 
+    backgroundColor: "#fff", 
+    borderRadius: 12, 
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 3,
+    alignItems: "center",
   },
   mealInfo: { 
     flex: 1, 
     marginRight: 10, 
+    paddingRight: 10,
   },
-  mealType: { fontSize: 18, fontWeight: "bold", marginBottom: 5 },
+  mealHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+  mealType: { 
+    fontSize: 18, 
+    fontWeight: "bold",
+    color: "#222",
+    marginBottom: 5 
+  },
+  mealDetail: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 2,
+  },
+  ingredient: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 2,
+  },
+  mealCalories: {
+    fontSize: 14,
+    fontWeight: "500",
+    marginTop: 4,
+  },
   buttonContainer: { 
     flexDirection: "row", 
     alignItems: "center",
