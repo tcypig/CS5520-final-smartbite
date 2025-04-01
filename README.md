@@ -5,16 +5,48 @@ We have structured our Firestore database to ensure **efficient data retrieval, 
 
 ### **Top-Level Collection:**  
 - **`users`** → Each user has their own data.
+- Contains two sub-collections:
+  - meals
+  - recipes
+- Currently, the user document itself is empty, but we plan to add fields in the future (e.g., profile preferences, avatar, signup date).
 
 ### **Sub-Collections (under `users/{userId}`):**  
 - **`meals`** → Stores meal logs for each user (`{mealId}` document). When a meal is added, its nutrition is automatically analyzed 
 and stored within the meal document. Each document ({mealId}) represents a meal, allowing users to add, edit, and delete meals as needed.
+
+  ```
+  meals Schema
+  {
+    id: string;
+    date: Timestamp;
+    type: string;            // type of the meal (e.g., "Breakfast")
+    image?: string;
+    ingredients: string[];
+    analyzed: boolean;
+    nutrition?: Nutrition;
+  }
+
+  ```
   - ✅ **Create** meals using `writeMealToDB()`.  
   - ✅ **Read** meals and their nutrition using `fetchMeals()`.  
   - ✅ **Update** meals using `updateMealToDB()`.  
   - ✅ **Delete** meals using `deleteMealFromDB()`.  
 - **`recipes`** → Stores saved recipes for each user (`{recipeId}` document).  
 Users can create, edit, delete, and mark recipes as favorite. Each document (`{recipeId}`) represents an individual recipe, containing ingredients, instructions, and timestamps.
+  ```
+  recipes Schema
+  {
+    id?: string;
+    name: string;
+    ingredients: string[];
+    instructions: string;
+    photoUrl?: string;
+    createdAt?: any;
+    isFavorite?: boolean;
+  }
+
+  ```
+
   - ✅ **Create** recipes using addRecipe().
   - ✅ **Read** recipes using getAllRecipes() or getRecipeById().
   - ✅ **Update** recipes using updateRecipe().
@@ -38,13 +70,16 @@ We've implemented the core nutrition tracking functionalities, including:
 2. **Adding new meals**, with automatic nutrition analysis.  
 3. **Viewing detailed nutrition breakdown** for each meal.  
 4. **Editing or deleting meals** as needed.  
+5. **Uploading meal images** using the device camera, with image storage integrated via Firebase Storage.
 
 
 #### Nutrition Screenshot:  
 <img src="assets/nutritionPhoto/allNutritions.png" alt="all Meals & Nutrition" width="20%"/>
+<img src="assets/nutritionPhoto/emptyMeal.png" alt="all Meals & Nutrition" width="20%"/>
 <img src="assets/nutritionPhoto/addMeal.png" alt="Add Meals" width="20%"/>
-<img src="assets/nutritionPhoto/mealDetail.png" alt="Meals Detail" width="20%"/>
 <img src="assets/nutritionPhoto/editMeal.png" alt="Edit Meals" width="20%"/>
+<img src="assets/nutritionPhoto/mealDetail.png" alt="Meals Detail" width="20%"/>
+
 
 #### Recipe Screenshot:  
 <img src="assets/recipePhoto/allRecipes.png" alt="all Meals & Nutrition" width="20%"/>
@@ -57,19 +92,15 @@ We've implemented the core nutrition tracking functionalities, including:
 ## 3. Team Contributions  
 | **Team Member** | **Contributions** |
 |----------------|------------------|
-| **Yuan Tian** |  **Responsible for the nutrition part.** 1) Designed and optimized the nutrition database structure and queries to efficiently store, retrieve, and update meal nutrition data in Firestore.  2) Developed screen layouts and UI components for nutrition parts, including `AllNutrition.tsx`, `AddMeal.tsx`, `EditMeal.tsx`, and `MealDetail.tsx`.  3) Implemented automatic nutrition analysis using an external API when adding meals, ensuring seamless integration with Firestore. |
-| **Yue Wang** | 1) Designed and structured the **recipe database** in Firestore to efficiently manage user-created recipes, ensuring seamless CRUD operations.  
-2) Developed screen layouts and UI components for the recipe sections, including `index.tsx`(all recipe screen), `[id].tsx`(recipe detail screen), `Add.tsx`(add recipe screen), and `Edit.tsx`(edit recipe screen).  
-3) Implemented **favorite functionality**, allowing users to mark and unmark recipes as favorite, storing this preference in Firestore for persistence, and allowing display filters to conditionally render recipe cards in the screen.
-4) Applied theme changing functionality throughout the entire application.
-4) Ensured data consistency by aligning the recipe structure with the meal storage model, keeping Firestore operations efficient and unified. 
+| **Yuan Tian** |  **Responsible for the nutrition part.** 1) Designed and optimized the nutrition database structure and queries to efficiently store, retrieve, and update meal nutrition data in Firestore.  2) Developed screen layouts and UI components for nutrition parts, including `AllNutrition.tsx`, `AddMeal.tsx`, `EditMeal.tsx`, and `MealDetail.tsx`.  3) Implemented automatic nutrition analysis using an external API when adding meals, ensuring seamless integration with Firestore. 4) Implemented image upload functionality for meals using Firebase Storage. |
+| **Yue Wang** | 1) Designed and structured the **recipe database** in Firestore to efficiently manage user-created recipes, ensuring seamless CRUD operations.  2) Developed screen layouts and UI components for the recipe sections, including `index.tsx`(all recipe screen), `[id].tsx`(recipe detail screen), `Add.tsx`(add recipe screen), and `Edit.tsx`(edit recipe screen).  3) Implemented **favorite functionality**, allowing users to mark and unmark recipes as favorite, storing this preference in Firestore for persistence, and allowing display filters to conditionally render recipe cards in the screen. 4) Applied theme changing functionality throughout the entire application. 5) Ensured data consistency by aligning the recipe structure with the meal storage model, keeping Firestore operations efficient and unified. 
 
 
 
 ---
 
 ## 4. Next Steps  
-- Integrate **camera functionality** for recipe and meal photo uploads.
+- Integrate **camera functionality** for recipe photo uploads.
 - Implement **notifications** to allow users to schedule reminders. 
 - Add **user authentication** to enable secure login and personalized data storage.
 - Improve **UI & Styling** for a better user experience.
