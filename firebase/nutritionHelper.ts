@@ -25,7 +25,7 @@ export async function analyzeNutrition(userId: string, mealId: string, ingredien
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
-            "Edamam-Account-User": API_ID 
+            // "Edamam-Account-User": API_ID 
           },
           body: JSON.stringify({ ingr: ingredients }),
         }

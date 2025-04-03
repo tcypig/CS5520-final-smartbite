@@ -3,13 +3,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/types'
 import React, { useContext, useEffect, useState } from 'react'
 import { deleteMealFromDB, updateMealToDB } from '@/firebase/nutritionHelper'
-import { userId } from './AddMeal'
+// import { userId } from './AddMeal'
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Timestamp } from 'firebase/firestore';
 import MealForm from '@/components/MealForm';
 import { ThemeContext } from '@/ThemeContext';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/firebase/firebaseSetup';
+import { auth, storage } from '@/firebase/firebaseSetup';
 
 
 export default function EditMeal() {
@@ -17,10 +17,20 @@ export default function EditMeal() {
   const [currentTheme, setCurrentTheme] = useState(theme);
   const [meal, setMeal] = useState<Meal | null>(null);
   const [displayImageUri, setDisplayImageUri] = useState<string>("");
+  const [userId, setUserId] = useState<string>("testUser");
 
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      setUserId("testUser");
+    }
+  }, []);
 
   const params = useLocalSearchParams(); 
   const mealId = params.id as string;

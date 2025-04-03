@@ -15,7 +15,7 @@ interface MealFormProps {
     onSubmit: (meal: Meal) => void;
 }
 
-export const userId = "testUser";
+// export const userId = "testUser";
 
 export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
   const [date, setDate] = useState<Date | null>(initialMeal ? initialMeal.date.toDate(): null);

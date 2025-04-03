@@ -7,18 +7,28 @@ import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '@/ThemeContext';
 import { Meal } from '@/types';
 import { ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '@/firebase/firebaseSetup';
+import { auth, storage } from '@/firebase/firebaseSetup';
 
 
-export const userId = "testUser";
+// export const userId = "testUser";
 
 export default function AddMeal() {
   const { theme } = useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
+  const [userId, setUserId] = useState<string>("testUser");
 
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      setUserId("testUser");
+    }
+  }, []);
 
   async function fetchImage(uri: string) {
     try {

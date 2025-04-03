@@ -2,8 +2,8 @@ import { FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, Vi
 import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
-import { database } from '@/firebase/firebaseSetup'
-import { userId } from '@/app/(protected)/(tabs)/(nutritions)/AddMeal';
+import { auth, database } from '@/firebase/firebaseSetup'
+// import { userId } from '@/app/(protected)/(tabs)/(nutritions)/AddMeal';
 import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
 import { mealsFromDB, Nutrition } from '@/types';
@@ -25,14 +25,25 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
   ]);
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
 
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      setUserId("testUser");
+    }
+  }, []);
+
   // set listener for meals collection
   useEffect(() => {
     if (!userId) return;
+    console.log("userId", auth.currentUser?.uid);
     try {
       const mealsRef = collection(database, "users", userId, "meals");
 
