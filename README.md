@@ -45,14 +45,6 @@ Users can create, edit, delete, and mark recipes as favorite. Each document (`{r
   isFavorite?: boolean;
 }
 
-User Schema {
-  id?: number;
-  nickname?: string;
-  photoUrl?: string;
-  email?: string;
-  address?: Address;
-}
-
   ```
 
   - ✅ **Create** recipes using `addRecipe()`, profile using `saveUserProfile()`.
