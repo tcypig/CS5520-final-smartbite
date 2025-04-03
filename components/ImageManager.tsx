@@ -4,17 +4,17 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeContext } from '@/ThemeContext';
 
-
 interface ImageManagerProps {
   imageUriHandler: (uri: string) => void;
 }
 
 export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
   const [permissionResponse, requestPermission] = ImagePicker.useCameraPermissions();
+  const [mediaPermission, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
   const [imageUri, setImageUri] = useState<string>("");
+  
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
-
 
   async function verifyPermissions() {
     if (permissionResponse?.granted) return true;
@@ -27,6 +27,18 @@ export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
     }
   }
 
+  async function verifyMediaPermissions() {
+    if (mediaPermission?.granted) return true;
+    const responseAfterRequest = await requestMediaPermission();
+    console.log(responseAfterRequest);
+    if (responseAfterRequest?.granted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // 拍照
   async function takeImageHandler() {
     const hasPermission = await verifyPermissions();
     if (!hasPermission) {
@@ -47,9 +59,28 @@ export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
     }
   };
 
+  async function pickFromGalleryHandler() {
+    const hasPermission = await verifyMediaPermissions();
+    if (!hasPermission) {
+      Alert.alert("No permissions", "You need to grant gallery permissions to use this feature", [{ text: "OK"}]);
+      return;
+    }
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+      });
+      console.log(result);
+      if (result.canceled) return;
+      setImageUri(result.assets[0].uri);
+      imageUriHandler(result.assets[0].uri);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <View>
-      <Pressable 
+      <Pressable
         onPress={takeImageHandler}
         style={({ pressed }) => [
           styles.imageButton,
@@ -61,14 +92,26 @@ export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
           <Text style={styles.imageButtonText}>Take Image</Text>
         </View>
       </Pressable>
-      {/* {imageUri ? ( 
+
+      <Pressable
+        onPress={pickFromGalleryHandler}
+        style={({ pressed }) => [
+          styles.imageButton,
+          pressed && { opacity: 0.7 }
+        ]}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Ionicons name="image-outline" size={16} />
+          <Text style={styles.imageButtonText}>Upload from Gallery</Text>
+        </View>
+      </Pressable>
+
+      {/* {imageUri ? (
         <Image
-          source={{
-            uri: imageUri,
-          }}
-        style={styles.image}
-      />
-    ) : null} */}
+          source={{ uri: imageUri }}
+          style={styles.image}
+        />
+      ) : null} */}
     </View>
   )
 }
@@ -92,4 +135,4 @@ const styles = StyleSheet.create({
   imageButtonText: {
     marginLeft: 6,
   },
-})
+});

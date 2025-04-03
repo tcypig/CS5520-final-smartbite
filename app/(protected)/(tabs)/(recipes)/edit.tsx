@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getRecipeById, updateRecipe } from '../../../firebase/firestore';
-import { ThemeContext } from '../../../ThemeContext';
+import { getRecipeById, updateRecipe } from '../../../../firebase/firestore';
+import { ThemeContext } from '../../../../ThemeContext';
 import { RecipeData } from '@/types';
 
 export default function EditRecipeScreen() {

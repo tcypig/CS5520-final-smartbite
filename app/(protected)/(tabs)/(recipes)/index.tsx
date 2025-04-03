@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { getAllRecipes, updateRecipe } from '../../../firebase/firestore';
+import { getAllRecipes, updateRecipe } from '../../../../firebase/firestore';
 import { RecipeData } from '@/types';
-import RecipeCard from '../../../components/RecipeCard';
+import RecipeCard from '../../../../components/RecipeCard';
 import PressableButton from '@/components/PressableButton';
-import { ThemeContext } from '../../../ThemeContext';
+import { ThemeContext } from '../../../../ThemeContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
@@ -83,7 +83,6 @@ export default function RecipesMainScreen() {
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
       <View style={styles.headerRow}>
-        <Text style={[styles.title, { color: currentTheme.text }]}>Saved Recipes</Text>
       </View>
   
       <View style={styles.categoryContainer}>

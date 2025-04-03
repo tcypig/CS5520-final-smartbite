@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 import { database } from '@/firebase/firebaseSetup'
-import { userId } from '@/app/(tabs)/(nutritions)/AddMeal';
+import { userId } from '@/app/(protected)/(tabs)/(nutritions)/AddMeal';
 import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
 import { mealsFromDB, Nutrition } from '@/types';

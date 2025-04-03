@@ -1,12 +1,12 @@
-// app/(tabs)/(others)/_layout.tsx
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { ThemeContext } from '../../../../ThemeContext';
 
-export default function OthersLayout() {
+export default function RecipesLayout() {
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
 
+  // Update layout when theme changes
   useEffect(() => {
     setCurrentTheme(theme);
   }, [theme]);
@@ -20,27 +20,27 @@ export default function OthersLayout() {
         headerBackVisible: true,
       }}
     >
-      {/* Main "Settings" page */}
+      {/* Main Recipes list */}
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: 'Settings',
+          headerTitle: 'All My Recipes',
+        }}
+      />
+      
+      {/* Add new Recipe screen */}
+      <Stack.Screen
+        name="add"
+        options={{
+          headerTitle: 'Add Recipe',
         }}
       />
 
-      {/* Register a stack screen for preferences */}
+      {/* Single Recipe detail screen */}
       <Stack.Screen
-        name="preferences/index"
+        name="[id]"
         options={{
-          headerTitle: 'Preferences',
-        }}
-      />
-
-      {/* If you want a single preference detail/edit page */}
-      <Stack.Screen
-        name="preferences/[id]"
-        options={{
-          headerTitle: 'Preference Detail',
+          headerTitle: 'Recipe Details',
         }}
       />
     </Stack>

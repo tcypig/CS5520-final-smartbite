@@ -47,3 +47,24 @@ export interface Nutrition {
   };
 
 }
+
+export interface Geo {
+  lat?: string;
+  lng?: string;
+}
+
+export interface Address {
+  street?: string;
+  suite?: string;
+  city?: string;
+  zipcode?: string;
+  geo?: Geo;
+}
+
+export interface User {
+  id?: number;
+  nickname?: string;
+  photoUrl?: string;
+  email?: string;
+  address?: Address;
+}

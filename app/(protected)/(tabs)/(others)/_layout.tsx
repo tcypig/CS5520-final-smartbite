@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import { ThemeContext } from '../../../ThemeContext';
+import { ThemeContext } from '../../../../ThemeContext';
 
 export default function OthersLayout() {
   const { theme } = React.useContext(ThemeContext);
