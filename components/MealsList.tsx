@@ -1,15 +1,18 @@
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { collection, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 import { auth, database } from '@/firebase/firebaseSetup'
-// import { userId } from '@/app/(protected)/(tabs)/(nutritions)/AddMeal';
 import { router } from 'expo-router';
 import CustomPieChart from './CustomPieChart';
 import { mealsFromDB, Nutrition } from '@/types';
 import { ThemeContext } from '@/ThemeContext';
 import EmptyState from './EmptyState';
-
+import * as Notifications from 'expo-notifications';
+import { triggerCalorieLimitNotification } from './NotificationManager';
+import SummaryCard from './SummaryCard';
+import CalorieGoalModal from './CalorieGoalModal';
+import { updateLastNotificationDate, writeDailyCalorieToDB } from '@/firebase/nutritionHelper';
 
 interface MealsListProps {
   startDate: Date; 
@@ -26,6 +29,14 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
   const [userId, setUserId] = useState<string | null>(null);
+  const [averageCalories, setAverageCalories] = useState(0);
+  const [todayCalories, setTodayCalories] = useState(0);
+  const [showGoalModal, setShowGoalModal] = useState(false);
+  const [calorieLimit, setCalorieLimit] = useState<number | null>(null);
+  const [notificationEnabled, setNotificationEnabled] = useState(false);
+  const [lastNotificationDate, setLastNotificationDate] = useState<string | null>(null);
+
+
 
   useEffect(() => {
     setCurrentTheme(theme);
@@ -73,9 +84,16 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
         } else {
           let newMeals: mealsFromDB[] = [];
           let totalFat = 0, totalProtein = 0, totalCarbs = 0;
+          let totalCaloriesToday = 0;
+          let totalCaloriesAll = 0;
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
 
           snapshot.forEach(async (doc) => {
             const meal = doc.data() as mealsFromDB;
+            const mealDate = meal.date.toDate();
+            mealDate.setHours(0, 0, 0, 0);
             
             const nutrition = meal.nutrition
             ? { 
@@ -100,6 +118,13 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
               totalProtein += meal.nutrition.totalNutrients.PROCNT?.quantity || 0;
               totalCarbs += meal.nutrition.totalNutrients.CHOCDF?.quantity || 0;
             }
+
+            const mealCalories = meal.nutrition?.calories || 0;
+            totalCaloriesAll += mealCalories;
+
+            if (mealDate.getTime() === today.getTime()) {
+              totalCaloriesToday += meal.nutrition?.calories || 0;
+            }
           });
 
           setMeals(newMeals);
@@ -108,6 +133,14 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
             { name: "Protein", value: totalProtein, color: "#FF6666" },
             { name: "Carbs", value: totalCarbs, color: "#66CC66" },
           ]);
+          setTodayCalories(totalCaloriesToday);
+
+          const daysDiff = Math.max(
+            1,
+            Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+          );
+          setAverageCalories(Math.round(totalCaloriesAll / daysDiff));
+
         }
       });
       return () => unsubscribe();
@@ -115,6 +148,49 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
       console.error('Error getting meals: ', error)
     }
   }, [userId, startDate, endDate])
+
+
+  // set listener for daily calorie goal
+  useEffect(() => {
+    if (!userId) return;
+  
+    const ref = doc(database, 'users', userId, 'notification', 'dailyCalories');
+    const unsubscribe = onSnapshot(ref, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        setCalorieLimit(data.calorieLimit);
+        // console.log("calorie Limit in meallist", calorieLimit);
+        setNotificationEnabled(data.notificationEnabled);
+        setLastNotificationDate(data.lastNotificationDate || null);
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [userId]);
+
+
+  // listener for triggering notification
+  useEffect(() => {
+    if (
+      !userId ||
+      calorieLimit == null ||
+      !notificationEnabled ||
+      todayCalories <= calorieLimit
+    ) return;
+  
+    // const todayString = new Date().toISOString().split('T')[0];
+    const todayString = new Date().toLocaleDateString('sv-SE');
+    if (lastNotificationDate === todayString) return;
+  
+    const handleTriggerNotification = async () => {
+      triggerCalorieLimitNotification(todayCalories, calorieLimit);
+      await updateLastNotificationDate(userId, todayString);
+    };
+  
+    handleTriggerNotification();
+  }, [userId, calorieLimit, notificationEnabled, lastNotificationDate, todayCalories]);
+  
+  
 
   function handlePressDetail(item: mealsFromDB) {
     router.push({
@@ -140,13 +216,59 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
       });
   }
 
+  async function handleSetGoal(limit: number, enableNotification: boolean) {
+    setCalorieLimit(limit);
+    setShowGoalModal(false);
+    if (userId) {
+      try {
+        await writeDailyCalorieToDB(userId, limit, enableNotification)
+      } catch (error) {
+        console.error("Error setting goal: ", error);
+      }
+    }
+  }
+  
+  function handleCancelGoal() {
+    setShowGoalModal(false);
+  }
+
+  function getMealIcon(type: string) {
+    switch (type.toLowerCase()) {
+      case 'breakfast':
+        return 'cafe-outline';
+      case 'lunch':
+        return 'restaurant-outline';
+      case 'dinner':
+        return 'pizza-outline';
+      case 'snack':
+        return 'ice-cream-outline';
+      default:
+        return 'fast-food-outline';
+    }
+  }
+  
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: currentTheme.background }]}>
       {/* Pie Chart */}
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <CustomPieChart chartData={chartData} />
-      </View>
+      </View> */}
+
+      {/* SummaryCard */}
+      <SummaryCard 
+        averageCalories={averageCalories}
+        calorieLimit={calorieLimit ?? undefined}
+        chartData={chartData}
+        onSetGoal={() => setShowGoalModal(true)}
+        onHistoryPress={() => router.push("NutritionHistory")}
+      />
+      <CalorieGoalModal 
+        visible={showGoalModal}
+        originalLimit={calorieLimit ?? undefined}
+        onConfirm={handleSetGoal}
+        onCancel={handleCancelGoal}
+      />
 
       {/* Meals List */}
       {meals.length === 0 ? (
@@ -155,10 +277,15 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
       meals.map((item) => (
         <View key={item.id} style={styles.mealCard}>
           <View style={styles.mealInfo}>
-            <Text style={styles.mealType}>{item.type}</Text>
-            <Text style={styles.mealDetail}>Date: {item.date.toDate().toDateString()}</Text>
-            <Text style={styles.mealDetail}>Calories: {item.nutrition?.calories} kcal</Text>
-            <Text style={styles.mealDetail}>Ingredients: {item.ingredients.join(", ")}</Text>
+            <View style={styles.mealTypeContainer}>
+              <Ionicons name={getMealIcon(item.type)} size={16} color="#4CAF50" style={{ marginRight: 6 }}/>
+              <Text style={styles.mealType}>{item.type}</Text>
+            </View>
+            <View style={styles.mealDetailContainer}>
+              <Text style={styles.mealDetail}>Date: {item.date.toDate().toDateString()}</Text>
+              <Text style={styles.mealDetail}>Calories: {item.nutrition?.calories} kcal</Text>
+              <Text style={styles.mealDetail}>Ingredients: {item.ingredients.join(", ")}</Text>
+            </View>
           </View>
           <View style={styles.buttonContainer}>
             <Pressable 
@@ -209,17 +336,23 @@ const styles = StyleSheet.create({
     marginRight: 10, 
     paddingRight: 10,
   },
-  mealHeaderRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 6,
-  },
+  mealTypeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+  },  
   mealType: { 
     fontSize: 18, 
     fontWeight: "bold",
-    color: "#222",
-    marginBottom: 5 
+    color: '#4CAF50', // Fresh green for clarity
+  },
+  mealDetailContainer: {
+    paddingHorizontal: 2,
   },
   mealDetail: {
     fontSize: 14,

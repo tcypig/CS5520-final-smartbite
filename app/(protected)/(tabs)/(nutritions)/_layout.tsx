@@ -22,6 +22,7 @@ export default function NutritionsLayout() {
       <Stack.Screen name="AddMeal" options={{title: "Add Meal"}} />
       <Stack.Screen name="EditMeal" options={{title: "Edit Meal"}} />
       <Stack.Screen name="MealDetail" options={{title: "Nutrition Detail"}} />
+      <Stack.Screen name="NutritionHistory" options={{title: "Nutrition History"}} />
     </Stack>
   )
 }

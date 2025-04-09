@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     flexDirection: "row", 
     justifyContent: "center", 
-    marginVertical: 10 
+    marginVertical: 10
   },
   mealImage: { 
     width: '100%', 
