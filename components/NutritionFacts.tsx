@@ -43,7 +43,7 @@ export default function NutritionFacts({ nutrients }: NutritionFactsProps) {
       </View>
 
       {/* Footer */}
-      <Text style={styles.footerText}>*Percent Daily Values are based on a 2000 calorie diet</Text>
+      <Text style={styles.footerText}>*Nutrient values are estimated. For reference only.</Text>
     </View>
   );
 }
@@ -95,6 +95,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginTop: 8,
-    textAlign: "center",
+    // textAlign: "center",
   },
 });

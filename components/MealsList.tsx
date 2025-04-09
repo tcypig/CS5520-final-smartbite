@@ -81,6 +81,8 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
             { name: "Protein", value: 0, color: "#FF6666" },
             { name: "Carbs", value: 0, color: "#66CC66" },
           ]);
+          setTodayCalories(0);
+          setAverageCalories(0);
         } else {
           let newMeals: mealsFromDB[] = [];
           let totalFat = 0, totalProtein = 0, totalCarbs = 0;
