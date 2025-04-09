@@ -13,6 +13,7 @@ import { triggerCalorieLimitNotification } from './NotificationManager';
 import SummaryCard from './SummaryCard';
 import CalorieGoalModal from './CalorieGoalModal';
 import { updateLastNotificationDate, writeDailyCalorieToDB } from '@/firebase/nutritionHelper';
+import Colors from '@/constants/styles';
 
 interface MealsListProps {
   startDate: Date; 
@@ -22,9 +23,9 @@ interface MealsListProps {
 export default function MealsList({startDate, endDate} : MealsListProps) {
   const [meals, setMeals] = useState<mealsFromDB[]>([])
   const [chartData, setChartData] = useState([
-    { name: "Fat", value: 0, color: "#FFCC00" },
-    { name: "Protein", value: 0, color: "#FF6666" },
-    { name: "Carbs", value: 0, color: "#66CC66" },
+    { name: "Fat", value: 0, color: Colors.chartYellow },
+    { name: "Protein", value: 0, color: Colors.chartRed },
+    { name: "Carbs", value: 0, color: Colors.chartGreen },
   ]);
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
@@ -77,9 +78,9 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
         if (snapshot.empty) {
           setMeals([]);
           setChartData([
-            { name: "Fat", value: 0, color: "#FFCC00" },
-            { name: "Protein", value: 0, color: "#FF6666" },
-            { name: "Carbs", value: 0, color: "#66CC66" },
+            { name: "Fat", value: 0, color: Colors.chartYellow },
+            { name: "Protein", value: 0, color: Colors.chartRed },
+            { name: "Carbs", value: 0, color: Colors.chartGreen },
           ]);
           setTodayCalories(0);
           setAverageCalories(0);
@@ -131,9 +132,9 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
 
           setMeals(newMeals);
           setChartData([
-            { name: "Fat", value: totalFat, color: "#FFCC00" },
-            { name: "Protein", value: totalProtein, color: "#FF6666" },
-            { name: "Carbs", value: totalCarbs, color: "#66CC66" },
+            { name: "Fat", value: totalFat, color: Colors.chartYellow },
+            { name: "Protein", value: totalProtein, color: Colors.chartRed },
+            { name: "Carbs", value: totalCarbs, color: Colors.chartGreen },
           ]);
           setTodayCalories(totalCaloriesToday);
 
@@ -280,7 +281,7 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
         <View key={item.id} style={styles.mealCard}>
           <View style={styles.mealInfo}>
             <View style={styles.mealTypeContainer}>
-              <Ionicons name={getMealIcon(item.type)} size={16} color="#4CAF50" style={{ marginRight: 6 }}/>
+              <Ionicons name={getMealIcon(item.type)} size={16} color={Colors.lightGreen} style={{ marginRight: 6 }}/>
               <Text style={styles.mealType}>{item.type}</Text>
             </View>
             <View style={styles.mealDetailContainer}>
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
   mealTypeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E8F5E9',
+    backgroundColor: Colors.lighterGreen,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -351,19 +352,19 @@ const styles = StyleSheet.create({
   mealType: { 
     fontSize: 18, 
     fontWeight: "bold",
-    color: '#4CAF50', // Fresh green for clarity
+    color: Colors.lightGreen, // Fresh green for clarity
   },
   mealDetailContainer: {
     paddingHorizontal: 2,
   },
   mealDetail: {
     fontSize: 14,
-    color: "#666",
+    color: Colors.darkGray,
     marginBottom: 2,
   },
   ingredient: {
     fontSize: 14,
-    color: "#666",
+    color: Colors.darkGray,
     marginBottom: 2,
   },
   mealCalories: {

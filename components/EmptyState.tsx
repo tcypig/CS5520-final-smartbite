@@ -1,4 +1,5 @@
 // components/EmptyState.tsx
+import Colors from '@/constants/styles';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderStyle: 'dashed',
-    borderColor: '#ccc',
+    borderColor: Colors.lightGray,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    color: '#999',
+    color: Colors.mediumGray,
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,

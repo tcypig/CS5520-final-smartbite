@@ -1,6 +1,7 @@
 import { Alert, Button, Modal, StyleSheet, Switch, Text, TextInput, View, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { on } from 'events';
+import Colors from '@/constants/styles';
 
 interface CalorieGoalModalProps {
   visible: boolean;
@@ -98,17 +99,17 @@ export default function CalorieGoalModal({ visible, originalLimit, onConfirm, on
             <Switch
               value={enableNotification}
               onValueChange={setEnableNotification}
-              trackColor={{ false: '#ccc', true: '#A5D6A7' }}
-              thumbColor={enableNotification ? '#4CAF50' : '#f4f3f4'}
+              trackColor={{ false: Colors.lightGray, true: '#A5D6A7' }}
+              thumbColor={enableNotification ? Colors.lightGreen : '#f4f3f4'}
             />
           </View>
 
           <View style={styles.buttonRow}>
             <View style={styles.buttonContainer}>
-              <Button title="Cancel" color="#999" onPress={onCancel} />
+              <Button title="Cancel" color={Colors.mediumGray} onPress={onCancel} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Confirm" color="#007AFF" onPress={handleSetGoal} />
+              <Button title="Confirm" color={Colors.accentBlue} onPress={handleSetGoal} />
             </View>
           </View>
         </View>
@@ -145,19 +146,19 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.darkGray,
     marginVertical: 8,
     textAlign: 'center',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.lightGray,
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
     marginBottom: 12,
     fontSize: 14,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.lightBackground,
   },
   recommendButton: {
     backgroundColor: '#E1F5FE',

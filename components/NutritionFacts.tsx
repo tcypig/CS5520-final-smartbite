@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Nutrition } from '@/types';
+import Colors from '@/constants/styles';
 
 
 interface NutritionFactsProps {
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: "#666",
+    color: Colors.darkGray,
     marginTop: 8,
     // textAlign: "center",
   },

@@ -4,6 +4,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { auth, database } from '@/firebase/firebaseSetup';
 import { DailyNutrition } from '@/types';
+import Colors from '@/constants/styles';
 
 const screenWidth = Dimensions.get('window').width - 32;
 
@@ -97,17 +98,17 @@ export default function NutritionHistory() {
             datasets: [
               {
                 data: fatValues,
-                color: () => '#FFCC00',
+                color: () => Colors.chartYellow,
                 strokeWidth: 2,
               },
               {
                 data: proteinValues,
-                color: () => '#FF6666',
+                color: () => Colors.chartRed,
                 strokeWidth: 2,
               },
               {
                 data: carbValues,
-                color: () => '#66CC66',
+                color: () => Colors.chartGreen,
                 strokeWidth: 2,
               },
             ],
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.lightBackground,
   },
   title: {
     fontSize: 18,

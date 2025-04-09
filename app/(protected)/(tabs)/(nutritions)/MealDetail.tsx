@@ -9,6 +9,7 @@ import { ThemeContext } from '@/ThemeContext';
 import { storage } from '@/firebase/firebaseSetup';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '@/constants/styles';
 
 const DEFAULT_IMAGE = "https://t4.ftcdn.net/jpg/10/74/62/49/360_F_1074624937_ut18QYOFrN0Eijzm0WF0LTxzl9wGlKtS.jpg";
 const IMAGE_PLACEHOLDER = "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
@@ -58,8 +59,8 @@ export default function MealDetail() {
   // Pie chart data
   const chartData = [
     { name: "Protein", value: protein, color: "#FF4D4D" },
-    { name: "Fat", value: fat, color: "#FFCC00" },
-    { name: "Carbs", value: carbs, color: "#4CAF50" },
+    { name: "Fat", value: fat, color: Colors.chartYellow },
+    { name: "Carbs", value: carbs, color: Colors.lightGreen },
   ];
 
   const { theme } = React.useContext(ThemeContext);
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   },
   calorieLabel: {
     fontSize: 14,
-    color: "#666",
+    color: Colors.darkGray,
   },
 
 })

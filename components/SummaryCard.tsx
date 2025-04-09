@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '@/constants/styles';
 
 interface SummaryCardProps {
   averageCalories: number;
@@ -98,11 +99,11 @@ const styles = StyleSheet.create({
   },  
   sideButton: {
     fontSize: 14,
-    color: '#007AFF',
+    color: Colors.accentBlue,
     fontWeight: '500',
   },
   disabled: {
-    color: '#ccc',
+    color: Colors.lightGray,
   },
   calorieCircle: {
     alignItems: 'center',
@@ -118,8 +119,8 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 65,
     borderWidth: 6,
-    borderColor: '#78C850',
-    backgroundColor: '#F5FFF2',
+    borderColor: Colors.pieGreenBorder,
+    backgroundColor: Colors.fadedWhite,
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   },
   recommendText: {
     fontSize: 12,
-    color: '#999',
+    color: Colors.mediumGray,
   },
   nutrientGroup: {
     marginTop: 20,
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   },
   nutrientLabel: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.darkGray,
     marginBottom: 4,
   },
   nutrientValue: {
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
   nutrientMeta: {
     fontSize: 12,
-    color: '#666',
+    color: Colors.darkGray,
     marginTop: 4,
   },
   progressBar: {
