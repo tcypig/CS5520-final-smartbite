@@ -5,7 +5,17 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { Ionicons } from '@expo/vector-icons'
 import MealsList from '@/components/MealsList'
 import { ThemeContext } from '@/ThemeContext'
+import * as Notifications from 'expo-notifications';
+import Colors from '@/constants/styles'
 
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function AllNutritions() {
   const [startDate, setStartDate] = useState(new Date());
@@ -114,5 +124,5 @@ const styles = StyleSheet.create({
   mealDate: { fontSize: 14, color: "#555" },
   mealType: { fontSize: 16, fontWeight: "bold" },
   iconContainer: { flexDirection: "row", gap: 15 },
-  addButton: { position: "absolute", bottom: 20, right: 20, backgroundColor: "#007AFF", borderRadius: 50, width: 50, height: 50, justifyContent: "center", alignItems: "center" },
+  addButton: { position: "absolute", bottom: 20, right: 20, backgroundColor: Colors.accentBlue, borderRadius: 50, width: 50, height: 50, justifyContent: "center", alignItems: "center" },
 })

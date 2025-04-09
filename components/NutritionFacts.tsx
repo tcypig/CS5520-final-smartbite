@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Nutrition } from '@/types';
+import Colors from '@/constants/styles';
 
 
 interface NutritionFactsProps {
@@ -43,7 +44,7 @@ export default function NutritionFacts({ nutrients }: NutritionFactsProps) {
       </View>
 
       {/* Footer */}
-      <Text style={styles.footerText}>*Percent Daily Values are based on a 2000 calorie diet</Text>
+      <Text style={styles.footerText}>*Nutrient values are estimated. For reference only.</Text>
     </View>
   );
 }
@@ -93,8 +94,8 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: "#666",
+    color: Colors.darkGray,
     marginTop: 8,
-    textAlign: "center",
+    // textAlign: "center",
   },
 });

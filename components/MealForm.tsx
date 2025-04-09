@@ -8,6 +8,7 @@ import { Meal } from '@/types';
 import { ThemeContext } from '@/ThemeContext';
 import ImageManager from './ImageManager';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '@/constants/styles';
 
 
 interface MealFormProps {
@@ -194,7 +195,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
         renderItem={({ item, index }) => (
           <View style={styles.ingredientCard}>
             <View style={styles.ingredientIcon}>
-              <Ionicons name="create-outline" size={24} color="#666" />
+              <Ionicons name="create-outline" size={24} color={Colors.darkGray} />
             </View>
             <View style={styles.ingredientTextBox}>
               <Text style={styles.ingredientTitle}>{item}</Text>

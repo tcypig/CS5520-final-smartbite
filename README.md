@@ -5,10 +5,10 @@ We have structured our Firestore database to ensure **efficient data retrieval, 
 
 ### **Top-Level Collection:**  
 - **`users`** → Each user has their own data.
-- Contains two sub-collections:
+- Contains 3 sub-collections:
   - meals
   - recipes
-- Currently, the user document itself is empty, but we plan to add fields in the future (e.g., profile preferences, avatar, signup date).
+  - notification *(new)*
 
 ### **Sub-Collections (under `users/{userId}`):**  
 - **`meals`** → Stores meal logs for each user (`{mealId}` document). When a meal is added, its nutrition is automatically analyzed 
@@ -53,9 +53,18 @@ Users can create, edit, delete, and mark recipes as favorite. Each document (`{r
   - ✅ **Update** recipes using `updateRecipe()`, profile using `updateUserProfile`.
   - ✅ **Delete** recipes using `deleteRecipe()` or `deleteAllRecipes()`.
 
- 
+- **`notification`** → New collection to manage daily calorie reminders.
 
-📌 **Database structure may change as needed** based on further requirements and optimizations.
+  ```ts
+  notification Schema (document: dailyCalories)
+  {
+    calorieLimit: number;
+    notificationEnabled: boolean;
+    lastNotificationDate: string | null;
+  }
+  ```
+  - ✅ **Create/Update** with `writeDailyCalorieToDB()`
+  - ✅ **Update notification history** with `updateLastNotificationDate()`
 
 ---
 
@@ -72,6 +81,8 @@ We've implemented the core nutrition tracking functionalities, including:
 3. **Viewing detailed nutrition breakdown** for each meal.  
 4. **Editing or deleting meals** as needed.  
 5. **Uploading meal images** using the device camera, with image storage integrated via Firebase Storage.
+6. **Showing history daily calorie totals and nutrient breakdown** over time.
+7. **Setting calorie goals with optional notifications**, including daily reminders when limit is exceeded.  
 
 
 #### Nutrition Screenshot:  
@@ -80,6 +91,8 @@ We've implemented the core nutrition tracking functionalities, including:
 <img src="assets/nutritionPhoto/addMeal.png" alt="Add Meals" width="20%"/>
 <img src="assets/nutritionPhoto/editMeal.png" alt="Edit Meals" width="20%"/>
 <img src="assets/nutritionPhoto/mealDetail.png" alt="Meals Detail" width="20%"/>
+<img src="assets/nutritionPhoto/setGoal.png" alt="Set Calorie Goal" width="20%"/>
+<img src="assets/nutritionPhoto/nutritionHistory.png" alt="Nutrition History Chart" width="20%"/>
 
 ### 🍳 Recipe Features  
 
@@ -133,6 +146,9 @@ We've implemented the core recipe management functionalities, including:
 - Developed UI screens: `AllNutrition.tsx`, `AddMeal.tsx`, `EditMeal.tsx`, and `MealDetail.tsx`.  
 - Implemented automatic nutrition analysis using an external API.  
 - Integrated image upload functionality for meals via Firebase Storage.
+- Developed the `NutritionHistory.tsx` screen to visualize calories and nutrient breakdown history using line charts.
+- Added calorie goal setting with notification reminders via Expo Notifications.
+- Built the `notification` collection schema and listeners to avoid duplicate popups.    
 
 ---
 
@@ -154,7 +170,7 @@ We've implemented the core recipe management functionalities, including:
 
 ## 4. Next Steps  
 - Integrate **camera functionality** for recipe photo uploads. - Done
-- Implement **notifications** to allow users to schedule reminders. 
+- Implement **notifications** to allow users to schedule reminders. - Done
 - Add **user authentication** to enable secure login and personalized data storage. - Done
 - Improve **UI & Styling** for a better user experience.
 - Acheieve **location** for grocery store recommendations.

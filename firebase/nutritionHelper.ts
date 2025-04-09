@@ -89,3 +89,33 @@ export async function deleteMealFromDB(userId:string, mealId: string) {
   }
 }
 
+
+export async function writeDailyCalorieToDB(userId: string, limit: number, enableNotification: boolean) {
+  try {
+    const notificationRef = doc(database, 'users', userId, 'notification', 'dailyCalories');
+
+    await setDoc(notificationRef, {
+      calorieLimit: limit,
+      notificationEnabled: enableNotification,
+      lastNotificationDate: null, // or keep previous if needed
+    }, { merge: true });
+
+    console.log('Daily calorie reminder saved to users/{userId}/notification');
+  } catch (error) {
+    console.error('Error saving calorie reminder:', error);
+    throw error;
+  }
+}
+
+export async function updateLastNotificationDate(userId: string, dateString: string) {
+  try {
+    const ref = doc(database, 'users', userId, 'notification', 'dailyCalories');
+    await setDoc(ref, { lastNotificationDate: dateString }, { merge: true });
+    console.log('lastNotificationDate updated to:', dateString);
+  } catch (error) {
+    console.error('Error updating lastNotificationDate:', error);
+    throw error;
+  }
+}
+
+

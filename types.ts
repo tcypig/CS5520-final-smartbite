@@ -48,6 +48,15 @@ export interface Nutrition {
 
 }
 
+export type DailyNutrition = {
+  date: string;
+  calories: number;
+  fat: number;
+  protein: number;
+  carbs: number;
+};
+
+
 export interface Geo {
   lat?: string;
   lng?: string;
