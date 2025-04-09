@@ -6,17 +6,17 @@ import Colors from '@/constants/styles';
 interface CalorieGoalModalProps {
   visible: boolean;
   originalLimit?: number;
-  origianlNotificationEnabled: boolean;
+  originalNotificationEnabled: boolean;
   onConfirm: (limit: number, enableNotification: boolean) => void;
   onCancel: () => void;
 }
 
-export default function CalorieGoalModal({ visible, originalLimit, origianlNotificationEnabled, onConfirm, onCancel }: CalorieGoalModalProps) {
+export default function CalorieGoalModal({ visible, originalLimit, originalNotificationEnabled, onConfirm, onCancel }: CalorieGoalModalProps) {
   const [calorieLimit, setCalorieLimit] = useState(originalLimit ? originalLimit.toString() : '');
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
   const [gender, setGender] = useState('');
-  const [enableNotification, setEnableNotification] = useState(origianlNotificationEnabled);
+  const [enableNotification, setEnableNotification] = useState(originalNotificationEnabled);
 
   useEffect(() => {
     if (visible) {

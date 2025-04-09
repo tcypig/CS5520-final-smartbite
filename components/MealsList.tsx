@@ -269,7 +269,7 @@ export default function MealsList({startDate, endDate} : MealsListProps) {
       <CalorieGoalModal 
         visible={showGoalModal}
         originalLimit={calorieLimit ?? undefined}
-        origianlNotificationEnabled={notificationEnabled}
+        originalNotificationEnabled={notificationEnabled}
         onConfirm={handleSetGoal}
         onCancel={handleCancelGoal}
       />
