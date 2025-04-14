@@ -8,14 +8,11 @@ import PressableButton from '@/components/PressableButton';
 import { ThemeContext } from '../../../../ThemeContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
-type Category = 'all' | 'favorites';
-
 export default function RecipesMainScreen() {
   const router = useRouter();
   const [recipes, setRecipes] = useState<Array<RecipeData & { id: string }>>([]);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'favorites'>('all');
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
@@ -27,7 +24,7 @@ export default function RecipesMainScreen() {
   const fetchRecipes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await getAllRecipes(); 
+      const data = await getAllRecipes();
       setRecipes(data);
     } catch (err) {
       console.error(err);
@@ -53,7 +50,6 @@ export default function RecipesMainScreen() {
   }, [recipes]);
 
   const toggleFavorite = async (recipeId: string) => {
-
     const isCurrentlyFav = favorites.has(recipeId);
     const newFavStatus = !isCurrentlyFav;
 
@@ -74,60 +70,35 @@ export default function RecipesMainScreen() {
   };
 
   const filteredRecipes = recipes.filter(recipe => {
-    if (selectedCategory === 'all') {
-      return true;
-    }
+    if (selectedCategory === 'all') return true;
     return favorites.has(recipe.id);
   });
 
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
-      <View style={styles.headerRow}>
-      </View>
-  
-      <View style={styles.categoryContainer}>
-        <Pressable
-          style={[
-            styles.categoryButton,
-            { backgroundColor: currentTheme.cardBackground },
-            selectedCategory === 'all' && styles.selectedCategory
-          ]}
-          onPress={() => setSelectedCategory('all')}
-        >
-          <Text style={[
-            styles.categoryText,
-            { color: currentTheme.cardText },
-            selectedCategory === 'all' && styles.selectedCategoryText
-          ]}>
-            All
-          </Text>
-        </Pressable>
 
-        <Pressable
-          style={[
-            styles.categoryButton,
-            { backgroundColor: currentTheme.cardBackground },
-            selectedCategory === 'favorites' && styles.selectedCategory
-          ]}
-          onPress={() => setSelectedCategory('favorites')}
-        >
-          <Text style={[
-            styles.categoryText,
-            { color: currentTheme.cardText },
-            selectedCategory === 'favorites' && styles.selectedCategoryText
-          ]}>
-            Favorites
-          </Text>
-        </Pressable>
+      <View style={styles.categoryContainer}>
+        {['all', 'favorites'].map((cat) => (
+          <Pressable
+            key={cat}
+            style={[styles.categoryButton, selectedCategory === cat && styles.selectedCategory]}
+            onPress={() => setSelectedCategory(cat as 'all' | 'favorites')}
+          >
+            <Text style={[styles.categoryText, selectedCategory === cat && styles.selectedCategoryText]}>
+              {cat === 'all' ? 'All' : 'Favorites'}
+            </Text>
+          </Pressable>
+        ))}
       </View>
-  
+
       <PressableButton
         pressedHandler={() => router.navigate('/(tabs)/(recipes)/add')}
+        componentStyle={styles.addButton}
       >
-        <Ionicons name="add" size={24} color={currentTheme.navigationTextColor} />
-        <Text style={{ color: currentTheme.navigationTextColor, marginLeft: 8 }}>Add Recipe</Text>
+        <Ionicons name="add-circle-outline" size={22} color="white" />
+        <Text style={styles.addButtonText}>Add New Recipe</Text>
       </PressableButton>
-  
+
       <FlatList
         data={filteredRecipes}
         keyExtractor={(item) => item.id}
@@ -142,7 +113,8 @@ export default function RecipesMainScreen() {
         )}
         refreshing={isLoading}
         onRefresh={fetchRecipes}
-        extraData={favorites}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -156,7 +128,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  title: { fontSize: 20, fontWeight: 'bold' },
+  title: {
+    fontSize: 26,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
   categoryContainer: {
     flexDirection: 'row',
     marginBottom: 16,
@@ -166,15 +142,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#f0f0f0',
   },
   selectedCategory: {
     backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
   },
   categoryText: {
     fontSize: 14,
+    color: '#333',
   },
   selectedCategoryText: {
     color: '#fff',
-    fontWeight: '500',
+    fontWeight: '600',
+  },
+  addButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  addButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 16,
+    marginLeft: 8,
   },
 });

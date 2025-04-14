@@ -1,5 +1,5 @@
-import { Alert, Button, Linking, StyleSheet, Text, View, Image, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeContext } from '@/ThemeContext';
@@ -12,64 +12,54 @@ export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
   const [permissionResponse, requestPermission] = ImagePicker.useCameraPermissions();
   const [mediaPermission, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
   const [imageUri, setImageUri] = useState<string>("");
-  
+
   const { theme } = React.useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
 
   async function verifyPermissions() {
     if (permissionResponse?.granted) return true;
     const responseAfterRequest = await requestPermission();
-    console.log(responseAfterRequest);
-    if (responseAfterRequest?.granted) {
-      return true;
-    } else {
-      return false;
-    }
+    if (responseAfterRequest?.granted) return true;
+    return false;
   }
 
   async function verifyMediaPermissions() {
     if (mediaPermission?.granted) return true;
     const responseAfterRequest = await requestMediaPermission();
-    console.log(responseAfterRequest);
-    if (responseAfterRequest?.granted) {
-      return true;
-    } else {
-      return false;
-    }
+    if (responseAfterRequest?.granted) return true;
+    return false;
   }
 
-  // 拍照
   async function takeImageHandler() {
     const hasPermission = await verifyPermissions();
     if (!hasPermission) {
-      Alert.alert("No permissions", "You need to grant camera permissions to use this feature", [{ text: "OK"}]);
+      Alert.alert("No permissions", "You need to grant camera permissions to use this feature", [{ text: "OK" }]);
       return;
     }
     try {
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
+        quality: 0.8,
       });
-      console.log(result);
       if (result.canceled) return;
-      setImageUri(result.assets[0].uri); // Store image URI
+      setImageUri(result.assets[0].uri);
       imageUriHandler(result.assets[0].uri);
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   async function pickFromGalleryHandler() {
     const hasPermission = await verifyMediaPermissions();
     if (!hasPermission) {
-      Alert.alert("No permissions", "You need to grant gallery permissions to use this feature", [{ text: "OK"}]);
+      Alert.alert("No permissions", "You need to grant gallery permissions to use this feature", [{ text: "OK" }]);
       return;
     }
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
+        quality: 0.8,
       });
-      console.log(result);
       if (result.canceled) return;
       setImageUri(result.assets[0].uri);
       imageUriHandler(result.assets[0].uri);
@@ -79,60 +69,51 @@ export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
   }
 
   return (
-    <View>
-      <Pressable
-        onPress={takeImageHandler}
-        style={({ pressed }) => [
-          styles.imageButton,
-          pressed && { opacity: 0.7 }
-        ]}
-      > 
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Ionicons name="camera-outline" size={16} />
-          <Text style={styles.imageButtonText}>Take Image</Text>
-        </View>
+    <View style={styles.wrapper}>
+      <Pressable onPress={takeImageHandler} style={({ pressed }) => [styles.button, pressed && styles.pressed]}> 
+        <Ionicons name="camera-outline" size={18} color="#fff" style={styles.icon} />
+        <Text style={styles.text}>Take Photo</Text>
       </Pressable>
 
-      <Pressable
-        onPress={pickFromGalleryHandler}
-        style={({ pressed }) => [
-          styles.imageButton,
-          pressed && { opacity: 0.7 }
-        ]}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Ionicons name="image-outline" size={16} />
-          <Text style={styles.imageButtonText}>Upload from Gallery</Text>
-        </View>
+      <Pressable onPress={pickFromGalleryHandler} style={({ pressed }) => [styles.button, pressed && styles.pressed]}> 
+        <Ionicons name="image-outline" size={18} color="#fff" style={styles.icon} />
+        <Text style={styles.text}>Upload from Gallery</Text>
       </Pressable>
-
-      {/* {imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          style={styles.image}
-        />
-      ) : null} */}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  image: { 
-    width: 200, 
-    height: 200, 
-    marginTop: 10 
+  wrapper: {
+    marginTop: 24,
+    alignItems: 'center',
+    gap: 14,
   },
-  imageButton: {
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'lightgrey',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 10,
+    backgroundColor: '#007AFF',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 50,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 5,
+    minWidth: 260,
   },
-  imageButtonText: {
-    marginLeft: 6,
+  icon: {
+    marginRight: 10,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  pressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.97 }],
   },
 });

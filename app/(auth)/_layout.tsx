@@ -12,7 +12,7 @@ export default function Layout() {
     <ThemeProvider>
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: currentTheme.navigationBackgroundColor },
+        headerStyle: { backgroundColor: "#8A4FFF" },
         headerTintColor: "white",
       }}
     >

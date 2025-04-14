@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebaseSetup";
@@ -11,13 +18,13 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState<"Weak" | "Medium" | "Strong">("Weak");
 
-  const loginHandler = () => {
-    router.replace("login");
-  };
-
   const handlePasswordChange = (text: string) => {
     setPassword(text);
     setPasswordStrength(getPasswordStrength(text));
+  };
+
+  const loginHandler = () => {
+    router.replace("login");
   };
 
   const signupHandler = async () => {
@@ -49,25 +56,43 @@ export default function Signup() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Create Your Account</Text>
+      <Text style={styles.subtitle}>
+        Start your SmartBite journey and personalize your meal experience.
+      </Text>
+
       <Text style={styles.label}>Email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Enter email"
         autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor="#999"
       />
 
       <Text style={styles.label}>Password</Text>
       <TextInput
         style={styles.input}
         secureTextEntry
-        placeholder="Password"
+        placeholder="Create password"
         value={password}
         onChangeText={handlePasswordChange}
+        placeholderTextColor="#999"
       />
       {password.length > 0 && (
-        <Text style={{ marginLeft: 12, marginBottom: 8, color: passwordStrength === "Strong" ? "green" : passwordStrength === "Medium" ? "orange" : "red" }}>
+        <Text
+          style={{
+            marginLeft: 4,
+            marginBottom: 8,
+            color:
+              passwordStrength === "Strong"
+                ? "green"
+                : passwordStrength === "Medium"
+                ? "orange"
+                : "red",
+          }}
+        >
           Password strength: {passwordStrength}
         </Text>
       )}
@@ -76,13 +101,27 @@ export default function Signup() {
       <TextInput
         style={styles.input}
         secureTextEntry
-        placeholder="Confirm Password"
+        placeholder="Re-enter password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
+        placeholderTextColor="#999"
       />
 
-      <Button title="Register" onPress={signupHandler} />
-      <Button title="Already Registered? Login" onPress={loginHandler} />
+      <View style={styles.buttonStack}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && styles.pressed,
+          ]}
+          onPress={signupHandler}
+        >
+          <Text style={styles.buttonText}>Register</Text>
+        </Pressable>
+
+        <Pressable style={styles.linkButton} onPress={loginHandler}>
+          <Text style={styles.linkText}>Already Registered? Login</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -94,16 +133,57 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
   },
-  input: {
-    borderColor: "#552055",
-    borderWidth: 2,
-    borderRadius: 8,
-    padding: 10,
-    marginVertical: 8,
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 6,
+    color: "#8A4FFF",
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: 14,
+    textAlign: "center",
+    color: "#555",
+    marginBottom: 20,
   },
   label: {
-    marginLeft: 8,
     marginTop: 12,
     fontWeight: "600",
+  },
+  input: {
+    width: "100%",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: "#F4F4F5",
+    fontSize: 16,
+    color: "#333",
+    marginVertical: 8,
+  },
+  buttonStack: {
+    marginTop: 24,
+    gap: 14,
+  },
+  button: {
+    backgroundColor: "#8A4FFF",
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  pressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  linkButton: {
+    alignItems: "center",
+  },
+  linkText: {
+    color: "#8A4FFF",
+    fontWeight: "500",
   },
 });

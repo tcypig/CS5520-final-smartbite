@@ -118,8 +118,11 @@ We've implemented the core recipe management functionalities, including:
 <img src="assets/recipePhoto/editRecipe.png" alt="Edit Recipe" width="20%"/>
 
 
-#### Settings Screenshot:
-<img src="assets/settings.png" alt="settings" width="20%"/>
+#### Others Screenshot:
+<img src="assets/others.png" alt="settings" width="20%"/>
+
+#### Map Screenshot:
+<img src="assets/map.png" alt="map" width="20%"/>
 
 #### Profile Screenshot:
 <img src="assets/profile.png" alt="profile" width="20%"/>
@@ -163,6 +166,10 @@ We've implemented the core recipe management functionalities, including:
 - Partially implemented **authentication** login/register/forgot password screens and functionalities in `app/(auth)`, user can now have their real time individual data that can be stored on firebase and retrirvable relating to their account, also they will be asked to input strong password through `utils/validatePassword` to make sure strong password, they will also receive password reset link from their email to reset. 
 - Achieved two **external AI apis** to work as a pipeline for generated texts, using google cloud vision api to recognized from photo,`utils/googleVision`, then combine preference input to be a comprehensive prompt to OPENAI api, model: gpt-4o-mini to generate recipes,`utils/generateRecipeWithAI`. The comprehensive logic is in `app/(protected)/(recipes)/AddRecipeWizard/Step3EditConfirm`. 
 - Applied a partial done **Welcome** page for users that are not registered or not logged in to browse limited contents.   !!!Note the APIs I was using are all paid usage, if you just want to see the workflow, please degrade my model selection from gpt4o to something free.
+- Achieved **Location** page for users to search their desired groceries. Used "Google Places API", to match exact items user search and reflect on the google map embedded in the screen. Allow range filter and information browsing functionality.
+- Created "Emoji Generator" to dynamically update the recipe photo if user does not upload any photo. It will make prompt to AI API so the emoji can be determined by AI base on the Recipe Name. 
+- Applied uniform UI/UX improvement, updated layout for the entire pages of recipe and others part, now the entire app's UI is outstanding. 
+
 
 
 

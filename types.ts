@@ -8,7 +8,6 @@ export interface RecipeData {
   photoUrl?: string;
   createdAt?: any;
   isFavorite?: boolean;
-
 }
 
 export interface Meal {
@@ -76,4 +75,9 @@ export interface User {
   photoUrl?: string;
   email?: string;
   address?: Address;
+}
+
+export interface LocationData {
+  latitude: number;
+  longitude: number;
 }

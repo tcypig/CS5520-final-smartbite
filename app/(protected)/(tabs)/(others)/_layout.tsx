@@ -29,19 +29,3 @@ export default function OthersLayout() {
     </Stack>
   );
 } 
-
-      // {/* Register a stack screen for preferences */}
-      // <Stack.Screen
-      //   name="preferences/index"
-      //   options={{
-      //     headerTitle: 'Preferences',
-      //   }}
-      // />
-
-      // {/* If you want a single preference detail/edit page */}
-      // <Stack.Screen
-      //   name="preferences/[id]"
-      //   options={{
-      //     headerTitle: 'Preference Detail',
-      //   }}
-      // />

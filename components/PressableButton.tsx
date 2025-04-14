@@ -5,8 +5,8 @@ import {
     Text,
     View,
     ViewStyle,
-  } from "react-native";
-  import React from "react";
+  } from 'react-native';
+  import React from 'react';
   
   interface PressableButtonProps {
     pressedHandler: () => void;
@@ -15,6 +15,7 @@ import {
     children: React.ReactNode;
     componentStyle?: StyleProp<ViewStyle>;
   }
+  
   export default function PressableButton({
     children,
     pressedHandler,
@@ -26,26 +27,38 @@ import {
       <Pressable
         onPressIn={pressedInHandler}
         onPress={pressedHandler}
-        style={({ pressed }) => {
-          return [
-            styles.defaultStyle,
-            componentStyle,
-            pressed && styles.defaultPressedStyle,
-            pressed && pressedStyle,
-          ];
-        }}
+        style={({ pressed }) => [
+          styles.base,
+          componentStyle,
+          pressed && styles.pressed,
+          pressed && pressedStyle,
+        ]}
       >
-        <View>{children}</View>
+        <View style={styles.content}>{children}</View>
       </Pressable>
     );
   }
   
   const styles = StyleSheet.create({
-    defaultStyle: {
-      backgroundColor: "dimgrey",
+    base: {
+      backgroundColor: '#007AFF',
+      borderRadius: 24,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      elevation: 3,
+      shadowColor: '#000',
+      shadowOpacity: 0.15,
+      shadowOffset: { width: 0, height: 1 },
     },
-    defaultPressedStyle: {
-      opacity: 0.5,
-      backgroundColor: "red",
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    pressed: {
+      opacity: 0.6,
     },
   });
+  
