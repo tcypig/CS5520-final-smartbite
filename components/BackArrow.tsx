@@ -12,8 +12,8 @@ interface BackArrowProps {
 
 export default function BackArrow({
   onPress,
-  color = '#000',
-  size = 24,
+  color = '#333',
+  size = 20,
   style,
 }: BackArrowProps) {
   const handlePress = () => {
@@ -25,7 +25,14 @@ export default function BackArrow({
   };
 
   return (
-    <Pressable onPress={handlePress} style={[styles.container, style]}>
+    <Pressable
+      onPress={handlePress}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && styles.pressed,
+        style,
+      ]}
+    >
       <Ionicons name="chevron-back" size={size} color={color} />
     </Pressable>
   );
@@ -33,16 +40,20 @@ export default function BackArrow({
 
 const styles = StyleSheet.create({
   container: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  pressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.96 }],
   },
 });

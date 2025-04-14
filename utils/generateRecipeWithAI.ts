@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { Alert } from 'react-native';
 
@@ -23,25 +22,25 @@ export async function generateRecipeWithAI({
   }
 
   const userPrompt = `
-You are a professional recipe creator. Based on the following request and optional image, generate a recipe.
-
-Request: ${prompt}
-${photoUrl ? `Image URL: ${photoUrl}` : ''}
-
-Output format (strictly follow this format):
-
-Recipe Name: <name>
-
-Ingredients:
-- <ingredient1>
-- <ingredient2>
-- ...
-
-Instructions:
-1. <step1>
-2. <step2>
-...
-`;
+  You are a professional recipe creator. Based on the following request and optional image, generate a recipe.
+  
+  Request: ${prompt}
+  ${photoUrl ? `Image URL: ${photoUrl}` : ''}
+  
+  == Output Format (MUST follow strictly) ==
+  
+  Recipe Name: <name>
+  
+  Ingredients:
+  - Each line must start with a dash (-).
+  - Each ingredient must contain full information (quantity, item, preparation) on a single line.
+  
+  Instructions:
+  1. <step1>
+  2. <step2>
+  ...
+  `;
+  
 
   try {
     const response = await axios.post(
@@ -77,12 +76,17 @@ Instructions:
       /(?:Instructions|Directions):\s*([\s\S]*)/i
     );
 
-    const ingredients =
-    ingredientsMatch?.[1]
-      ?.split('\n')
-      .map((line: string) => line.replace(/^[-•\s]+/, '').trim())
-      .filter(Boolean) || [];
+    // const ingredients =
+    // ingredientsMatch?.[1]
+    //   ?.split('\n')
+    //   .map((line: string) => line.replace(/^[-•\s]+/, '').trim())
+    //   .filter(Boolean) || [];
   
+    const ingredients = ingredientsMatch?.[1]
+      ?.split(/\r?\n/) // Split by newline
+      .map((line: string) => line.replace(/^[-•\s]+/, '').trim())
+      .filter(Boolean) // Remove empty lines
+      || [];
 
     return {
       name: nameMatch?.[1]?.trim() || 'Untitled Recipe',
@@ -91,7 +95,7 @@ Instructions:
     };
   } catch (error: any) {
     console.error('OpenAI full error:', JSON.stringify(error?.response?.data, null, 2));
-    Alert.alert('OpenAI 错误', error?.response?.data?.error?.message || 'Failed to generate recipe');
+    Alert.alert('OpenAI Error', error?.response?.data?.error?.message || 'Failed to generate recipe');
     throw new Error('Failed to generate recipe with AI');
   }
 }

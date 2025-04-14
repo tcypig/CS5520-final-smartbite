@@ -67,6 +67,25 @@ export default function OthersScreen() {
         </Pressable>
 
         <View style={[styles.settingCard, { backgroundColor: theme.cardBackground }]}>
+        <Pressable
+  onPress={() => router.push('./FindGroceries')}
+  style={({ pressed }) => [
+    styles.settingRow,
+    pressed && styles.pressedEffect, // Add visual feedback
+  ]}
+>
+  <View style={styles.settingLabelContainer}>
+    <Ionicons name="cart-outline" size={24} color={theme.text} />
+    <Text style={[styles.settingLabel, { color: theme.text }]}>
+      Find Groceries
+    </Text>
+  </View>
+  <Ionicons name="chevron-forward" size={20} color={theme.text} />
+</Pressable>
+</View>
+
+
+        <View style={[styles.settingCard, { backgroundColor: theme.cardBackground }]}>
           <View style={styles.settingRow}>
             <View style={styles.settingLabelContainer}>
               <Ionicons name={isDarkMode ? "moon" : "sunny"} size={24} color={theme.text} />
@@ -174,4 +193,20 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     textAlign: 'center',
   },
+    menuButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      padding: 16,
+      borderRadius: 12,
+      backgroundColor: '#E3F2FD',
+      marginHorizontal: 16,
+      marginTop: 8,
+    },
+    menuText: { fontSize: 16, fontWeight: '500' },
+    pressedEffect: {
+      opacity: 0.8,
+      transform: [{ scale: 0.98 }],
+    },
+    
 });
