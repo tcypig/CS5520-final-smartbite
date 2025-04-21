@@ -119,10 +119,10 @@ We've implemented the core recipe management functionalities, including:
 
 
 #### Others Screenshot:
-<img src="assets/others.png" alt="settings" width="20%"/>
+<img src="assets/recipePhoto/others.png" alt="settings" width="20%"/>
 
 #### Map Screenshot:
-<img src="assets/map.png" alt="map" width="20%"/>
+<img src="assets/recipePhoto/map.png" alt="map" width="20%"/>
 
 #### Profile Screenshot:
 <img src="assets/profile.png" alt="profile" width="20%"/>
@@ -138,6 +138,8 @@ We've implemented the core recipe management functionalities, including:
 #### Welcome Screenshot:
 <img src="assets/welcome_page.png" alt="welcome" width="20%"/>
 
+#### Guest Screenshot:
+<img src="assets/guest_screen.png" alt="welcome" width="20%"/>
 
 
 ---
@@ -151,7 +153,8 @@ We've implemented the core recipe management functionalities, including:
 - Integrated image upload functionality for meals via Firebase Storage.
 - Developed the `NutritionHistory.tsx` screen to visualize calories and nutrient breakdown history using line charts.
 - Added calorie goal setting with notification reminders via Expo Notifications.
-- Built the `notification` collection schema and listeners to avoid duplicate popups.    
+- Built the `notification` collection schema and listeners to avoid duplicate popups.  
+- Designed and implemented a user-friendly guestScreen.tsx for unlogged users to explore features and preview popular recipes.  
 
 ---
 
@@ -175,10 +178,30 @@ We've implemented the core recipe management functionalities, including:
 
 ---
 
-## 4. Next Steps  
-- Integrate **camera functionality** for recipe photo uploads. - Done
-- Implement **notifications** to allow users to schedule reminders. - Done
-- Add **user authentication** to enable secure login and personalized data storage. - Done
-- Improve **UI & Styling** for a better user experience.
-- Acheieve **location** for grocery store recommendations.
-- Possible **Daily recipe threads** for anounumous uses to browse.
+## 5. Firebase Rules
+```js
+rules_version = '2';
+
+service cloud.firestore {
+
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Meals subcollection
+      match /meals/{mealId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Recipes subcollection
+      match /recipes/{recipeId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Notification subcollection
+      match /notification/{notifId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}
