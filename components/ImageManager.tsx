@@ -6,9 +6,11 @@ import { ThemeContext } from '@/ThemeContext';
 
 interface ImageManagerProps {
   imageUriHandler: (uri: string) => void;
+  compact?: boolean;
+  uploadText?: string;
 }
 
-export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
+export default function ImageManager({ imageUriHandler, compact, uploadText }: ImageManagerProps) {
   const [permissionResponse, requestPermission] = ImagePicker.useCameraPermissions();
   const [mediaPermission, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
   const [imageUri, setImageUri] = useState<string>("");
@@ -70,14 +72,28 @@ export default function ImageManager({ imageUriHandler }: ImageManagerProps) {
 
   return (
     <View style={styles.wrapper}>
-      <Pressable onPress={takeImageHandler} style={({ pressed }) => [styles.button, pressed && styles.pressed]}> 
+      <Pressable 
+        onPress={takeImageHandler} 
+        style={({ pressed }) => [
+          styles.button, 
+          compact && styles.compactButton,
+          pressed && styles.pressed
+        ]}
+      > 
         <Ionicons name="camera-outline" size={18} color="#fff" style={styles.icon} />
-        <Text style={styles.text}>Take Photo</Text>
+        <Text style={[styles.text, compact && styles.compactText]}>Take Photo</Text>
       </Pressable>
 
-      <Pressable onPress={pickFromGalleryHandler} style={({ pressed }) => [styles.button, pressed && styles.pressed]}> 
+      <Pressable 
+        onPress={pickFromGalleryHandler} 
+        style={({ pressed }) => [
+          styles.button, 
+          compact && styles.compactButton,
+          pressed && styles.pressed
+        ]}
+      > 
         <Ionicons name="image-outline" size={18} color="#fff" style={styles.icon} />
-        <Text style={styles.text}>Upload from Gallery</Text>
+        <Text style={[styles.text, compact && styles.compactText]}>{uploadText || "Upload from Gallery"}</Text>
       </Pressable>
     </View>
   );
@@ -115,5 +131,13 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.9,
     transform: [{ scale: 0.97 }],
+  },
+  compactButton: {
+    minWidth: '40%',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  compactText: {
+    fontSize: 13,
   },
 });

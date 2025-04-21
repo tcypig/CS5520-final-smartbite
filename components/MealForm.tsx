@@ -152,7 +152,7 @@ export default function MealForm({ initialMeal, onSubmit }: MealFormProps) {
           <Text style={[styles.label, {color: currentTheme.text}]}>Image (optional)</Text>
         </View>
         <View style={styles.labelRow}>
-          <ImageManager imageUriHandler={imageUriHandler} />
+          <ImageManager imageUriHandler={imageUriHandler} compact uploadText="Upload Photo" />
         </View>
       </View>
       {takenImageUri && 
