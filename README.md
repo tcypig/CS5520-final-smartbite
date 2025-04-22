@@ -109,7 +109,6 @@ We've implemented the core recipe management functionalities, including:
 
 #### Recipe Screenshot:  
 <img src="assets/recipePhoto/all_recipes.png" alt="all Meals & Nutrition" width="20%"/>
-<img src="assets/recipePhoto/add_recipe_transition.png" alt="Add Recipes" width="20%"/>
 <img src="assets/recipePhoto/add_recipe_step1.png" alt="Add Recipes" width="20%"/>
 <img src="assets/recipePhoto/add_recipe_step2.png" alt="Add Recipes" width="20%"/>
 <img src="assets/recipePhoto/add_recipe_step3_ai.png" alt="Add Recipes" width="20%"/>
@@ -172,6 +171,7 @@ We've implemented the core recipe management functionalities, including:
 - Achieved **Location** page for users to search their desired groceries. Used "Google Places API", to match exact items user search and reflect on the google map embedded in the screen. Allow range filter and information browsing functionality.
 - Created "Emoji Generator" to dynamically update the recipe photo if user does not upload any photo. It will make prompt to AI API so the emoji can be determined by AI base on the Recipe Name. 
 - Applied uniform UI/UX improvement, updated layout for the entire pages of recipe and others part, now the entire app's UI is outstanding. 
+- Applied **Search** and **Sort** functionality to the recipes list.
 
 
 
