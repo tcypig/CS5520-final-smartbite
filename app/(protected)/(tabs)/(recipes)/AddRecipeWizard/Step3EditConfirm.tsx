@@ -23,8 +23,6 @@ import { addRecipe } from '@/firebase/firestore';
 import { ThemeContext } from '@/ThemeContext';
 import Colors from '@/constants/styles';
 
-import BackArrow from '@/components/BackArrow';
-
 export default function Step3EditConfirm() {
   const { imageUri, mode } = useLocalSearchParams<{ imageUri?: string; mode?: string }>();
   const { theme } = useContext(ThemeContext);
@@ -119,8 +117,6 @@ export default function Step3EditConfirm() {
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: currentTheme.background}]}>
-      <BackArrow style={styles.backArrow} />
-
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}
@@ -129,22 +125,35 @@ export default function Step3EditConfirm() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.headerContainer}>
-            <Text style={[styles.title, {color: currentTheme.text}]}>
-              {mode === 'ai' ? '✨ AI Recipe Generator' : '📝 Create New Recipe'}
-            </Text>
-            <Text style={[styles.stepIndicator, {color: currentTheme.text}]}>Step 3 of 3</Text>
-          </View>
-
-          {imageUri && (
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-              {!aiGenerated && (
-                <Text style={[styles.imageCaptionText, {color: currentTheme.text}]}>
-                  AI will analyze this image for ingredients
-                </Text>
+          {mode === 'ai' ? (
+            <>
+              <Text style={[styles.stepDescription, {color: currentTheme.text}]}>
+                {imageUri ? 'Use AI to generate a recipe from your image' : 'Generate a recipe with AI'}
+              </Text>
+              
+              {imageUri && (
+                <View style={styles.imageContainer}>
+                  <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                  {!aiGenerated && (
+                    <Text style={[styles.imageCaptionText, {color: currentTheme.text}]}>
+                      AI will analyze this image for ingredients
+                    </Text>
+                  )}
+                </View>
               )}
-            </View>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.stepDescription, {color: currentTheme.text}]}>
+                Enter your recipe details
+              </Text>
+              
+              {imageUri && (
+                <View style={styles.imageContainer}>
+                  <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                </View>
+              )}
+            </>
           )}
 
           {mode === 'ai' ? (
@@ -337,36 +346,16 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1,
   },
-  backArrow: {
-    position: 'absolute',
-    left: 16,
-    top: 60,
-    zIndex: 10,
-  },
   scrollContent: {
     padding: 20,
-    paddingTop: 60,
   },
-  headerContainer: {
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingTop: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 6,
-    textAlign: 'center',
-  },
-  stepIndicator: {
-    fontSize: 14,
-    color: Colors.mediumGray,
-    marginBottom: 10,
-  },
-  subtitle: {
+  stepDescription: {
     fontSize: 18,
-    marginVertical: 10,
     fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 25,
+    paddingHorizontal: 15,
+    lineHeight: 24,
   },
   imageContainer: {
     alignItems: 'center',
@@ -471,5 +460,11 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: '#FF3B30',
+  },
+  subtitle: {
+    fontSize: 20,
+    marginVertical: 16,
+    fontWeight: '600',
+    paddingHorizontal: 5,
   },
 });

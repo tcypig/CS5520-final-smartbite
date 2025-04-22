@@ -25,6 +25,7 @@ export default function RecipesLayout() {
         name="index"
         options={{
           headerTitle: 'All My Recipes',
+          headerBackVisible: false,
         }}
       />
       
@@ -41,6 +42,14 @@ export default function RecipesLayout() {
         name="[id]"
         options={{
           headerTitle: 'Recipe Details',
+        }}
+      />
+      
+      {/* AddRecipeWizard - hide parent header to prevent duplication */}
+      <Stack.Screen
+        name="AddRecipeWizard"
+        options={{
+          headerShown: false,
         }}
       />
     </Stack>

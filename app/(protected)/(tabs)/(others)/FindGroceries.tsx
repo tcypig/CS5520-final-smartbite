@@ -188,7 +188,7 @@ import React, {
       'store',
     ];
     const NAME_RE =
-      /grocery|supermarket|market|mart|food|foods|walmart|target|kroger|safeway|aldi|costco|fresh/i;
+    /grocery|supermarket|market|mart|food|foods|walmart|target|kroger|safeway|aldi|costco|fresh|save on|save-on-foods/i;
   
     const nearbyOnce = async (
       keyword: string,
@@ -315,7 +315,7 @@ import React, {
             setTimeout(() => fitToMarkers(uniq), 400);
             return;
           }
-          rKm *= 2; // increase radius and retry
+          rKm *= 1;
         }
         setErr('No matching stores found nearby. Try a larger radius or another keyword.');
       } catch (e: any) {

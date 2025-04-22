@@ -29,33 +29,50 @@ export default function Step1SelectImage() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.background }]}>
-      <Text style={[styles.title, { color: currentTheme.text }]}>📷 Step 1: Add a Photo</Text>
-      <Text style={[styles.subtitle, { color: currentTheme.text }]}>Upload a photo to help AI recognize ingredients</Text>
+      <View style={styles.content}>
+        <Text style={[styles.subtitle, { color: currentTheme.text }]}>
+          Upload a photo to help AI recognize ingredients
+        </Text>
 
-      {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-      ) : (
-        <Text style={styles.placeholderText}>No image selected yet...</Text>
-      )}
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+        ) : (
+          <Text style={styles.placeholderText}>No image selected yet...</Text>
+        )}
 
-      <ImageManager imageUriHandler={setImageUri} />
+        <ImageManager imageUriHandler={setImageUri} />
 
-      <View style={styles.buttonRow}>
-        <PressableButton pressedHandler={handleNext}>
-          <Text style={styles.buttonText}>Next</Text>
-        </PressableButton>
-        <PressableButton pressedHandler={handleSkip} componentStyle={{ backgroundColor: '#AAA' }}>
-          <Text style={styles.buttonText}>Skip</Text>
-        </PressableButton>
+        <View style={styles.buttonRow}>
+          <PressableButton pressedHandler={handleNext}>
+            <Text style={styles.buttonText}>Next</Text>
+          </PressableButton>
+          <PressableButton pressedHandler={handleSkip} componentStyle={{ backgroundColor: '#AAA' }}>
+            <Text style={styles.buttonText}>Skip</Text>
+          </PressableButton>
+        </View>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 6 },
-  subtitle: { fontSize: 14, color: '#666', marginBottom: 20 },
+  container: { 
+    flex: 1
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  subtitle: { 
+    fontSize: 18, 
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 30,
+    paddingHorizontal: 20,
+    lineHeight: 24
+  },
   imagePreview: { width: 220, height: 220, borderRadius: 12, marginBottom: 16 },
   placeholderText: { marginVertical: 16, color: '#aaa' },
   buttonRow: { flexDirection: 'row', gap: 16, marginTop: 24 },
