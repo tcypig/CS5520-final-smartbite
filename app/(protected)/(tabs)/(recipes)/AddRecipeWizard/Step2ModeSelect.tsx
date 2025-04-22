@@ -1,16 +1,16 @@
 import React, {useEffect, useContext, useState} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
-import BackArrow from '@/components/BackArrow';
 import { ThemeContext } from '@/ThemeContext';
 
 export default function Step2ModeSelect() {
-    const { theme } = useContext(ThemeContext);
-    const [currentTheme, setCurrentTheme] = useState(theme);
+  const { theme } = useContext(ThemeContext);
+  const [currentTheme, setCurrentTheme] = useState(theme);
   
-    useEffect(() => {
-      setCurrentTheme(theme);
-    }, [theme]);
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
+  
   const { imageUri } = useLocalSearchParams<{ imageUri?: string }>();
 
   function goManual() {
@@ -29,11 +29,10 @@ export default function Step2ModeSelect() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.background }]}>
-      <BackArrow style={styles.backArrow} />
-
       <View style={styles.content}>
-        <Text style={[styles.title, { color: currentTheme.text }]}>🧭 Step 2: Choose Input Mode</Text>
-        <Text style={[styles.subtitle, { color: currentTheme.text }]}>Select how you want to provide your recipe data</Text>
+        <Text style={[styles.subtitle, { color: currentTheme.text }]}>
+          How would you like to create your recipe?
+        </Text>
 
         <View style={styles.buttonStack}>
           <Pressable 
@@ -58,27 +57,14 @@ export default function Step2ModeSelect() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backArrow: {
-    position: 'absolute',
-    left: 16,
-    top: '50%',
-    transform: [{ translateY: -22 }],
-    zIndex: 10,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 6,
   },
   subtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 20,
+    fontSize: 18,
+    fontWeight: '600',
     textAlign: 'center',
+    marginBottom: 30,
+    paddingHorizontal: 20,
+    lineHeight: 24
   },
   buttonStack: {
     gap: 16,
@@ -115,5 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    padding: 20,
   },
 });
