@@ -94,7 +94,14 @@ export default function IndexScreen() {
           Discover and record delicious and healthy meals tailored for you!
         </Text>
 
-        <Pressable style={styles.button} onPress={handleViewAllRecipes}>
+        <Pressable style={styles.button} onPress={()=>{
+          if (auth.currentUser) {
+            router.replace('/(protected)/(tabs)/(recipes)');
+          } else {
+            router.navigate('/guestScreen')
+          }
+        }}
+        >
           <Text style={styles.buttonText}>Get Started</Text>
         </Pressable>
 
