@@ -15,8 +15,8 @@ export async function writeMealToDB(userId:string, data: DocumentData) {
 }
 
 export async function analyzeNutrition(userId: string, mealId: string, ingredients: string[]) {
-    const API_ID = "445edbc2";
-    const API_KEY = "7ef4af029853495c00d6650a0ad3678a";
+    const API_ID = process.env.EDAMAM_APP_ID;
+    const API_KEY = process.env.EDAMAM_APP_KEY;
   
     try {
       const response = await fetch(
